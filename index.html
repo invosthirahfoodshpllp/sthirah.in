@@ -12,6 +12,7 @@
             --text-muted: #555555;
             --green-accent: #116B32;
             --white: #FFFFFF;
+            --border-light: rgba(0,0,0,0.1);
         }
 
         * {
@@ -24,16 +25,24 @@
         body {
             background-color: var(--bg-sage);
             color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Clickable Elements */
+        .clickable {
+            cursor: pointer;
         }
 
         /* Header Navbar */
         .navbar {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
             width: 100%;
             z-index: 10;
             padding: 20px 40px;
+            background-color: var(--bg-sage);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .nav-container {
@@ -45,7 +54,7 @@
         }
 
         .logo-img {
-            height: 50px;
+            height: 55px;
             object-fit: contain;
         }
 
@@ -58,23 +67,35 @@
         .nav-links a {
             text-decoration: none;
             color: var(--text-dark);
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .nav-links a.active {
             text-decoration: underline;
+            font-weight: 700;
+        }
+
+        /* Page View Controller */
+        .page-view {
+            display: none;
+            flex: 1;
+        }
+
+        .page-view.active-view {
+            display: block;
         }
 
         /* Hero Section */
         .hero-section {
             width: 100%;
-            height: 480px;
+            height: 400px;
             background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
         }
 
-        /* Product Section */
+        /* Home / Product Section */
         .product-section {
-            padding: 80px 20px;
+            padding: 60px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -92,7 +113,7 @@
         }
 
         .info-block h1 {
-            font-size: 44px;
+            font-size: 42px;
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 25px;
@@ -121,6 +142,12 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .image-wrapper:hover {
+            transform: translateY(-3px);
         }
 
         .product-pack-img {
@@ -149,22 +176,35 @@
             width: 100%;
         }
 
-        .product-details h3 {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 6px;
+        .product-title-link {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            transition: color 0.2s;
         }
 
-        .product-details .price {
-            font-size: 14px;
+        .product-title-link:hover {
+            color: var(--green-accent);
+        }
+
+        .price {
+            font-size: 15px;
+            font-weight: 600;
             margin-bottom: 15px;
         }
 
-        .product-details .description {
-            font-size: 12px;
+        .benefits-list {
+            text-align: left;
+            font-size: 13px;
             line-height: 1.6;
             color: var(--text-dark);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 8px;
         }
 
         .size-selector {
@@ -191,11 +231,112 @@
             text-align-last: center;
         }
 
+        /* Single Product Dedicated Page Layout */
+        .product-page-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 50px;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .product-page-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .product-page-image img {
+            max-width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+        }
+
+        .product-page-details {
+            flex: 1;
+        }
+
+        .product-page-details h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .product-page-details .price-lg {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--green-accent);
+            margin-bottom: 20px;
+        }
+
+        .btn-add-cart {
+            background-color: var(--green-accent);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-add-cart:hover {
+            background-color: #0c4d24;
+        }
+
+        /* Generic Subpage View Style */
+        .content-page {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .content-page h1 {
+            font-size: 32px;
+            color: var(--green-accent);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-sage);
+            padding-bottom: 10px;
+        }
+
+        .content-page h2 {
+            font-size: 20px;
+            margin: 20px 0 10px 0;
+        }
+
+        .content-page p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .contact-box {
+            background-color: var(--bg-sage);
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 30px;
+        }
+
         /* Footer Section */
         .site-footer {
             background-color: var(--bg-sage);
             padding: 60px 40px 20px 40px;
-            border-top: 1px solid rgba(0,0,0,0.05);
+            border-top: 1px solid var(--border-light);
+            margin-top: auto;
         }
 
         .footer-container {
@@ -234,11 +375,17 @@
             text-decoration: none;
             color: var(--text-dark);
             font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--green-accent);
         }
 
         .highlight-link {
             text-decoration: underline !important;
             color: var(--green-accent) !important;
+            font-weight: 600;
         }
 
         .social-icons {
@@ -271,9 +418,8 @@
             color: var(--text-muted);
         }
 
-        /* Responsive */
         @media (max-width: 850px) {
-            .product-container {
+            .product-container, .product-page-container {
                 flex-direction: column;
             }
             .footer-grid {
@@ -290,57 +436,201 @@
     <!-- Header Navbar -->
     <header class="navbar">
         <div class="nav-container">
-            <!-- ATTACHED BRAND LOGO HERE -->
-            <div class="logo">
+            <!-- CLICK LOGO TO GO HOME -->
+            <div class="logo clickable" onclick="navigateTo('home-view')">
                 <img src="Sthirah DP Logo.jpg" alt="Sthirah Logo" class="logo-img">
             </div>
             <nav class="nav-links">
-                <a href="#" class="active">Home</a>
-                <a href="#shop">Shop</a>
-                <a href="#cart"><i class="fa-solid fa-cart-shopping"></i> 0</a>
+                <!-- CLICK HOME BUTTON TO GO HOME -->
+                <a href="javascript:void(0)" id="nav-home" class="active" onclick="navigateTo('home-view')">Home</a>
+                <!-- CLICK SHOP BUTTON TO GO TO PRODUCT PAGE -->
+                <a href="javascript:void(0)" id="nav-shop" onclick="navigateTo('product-view')">Shop</a>
+                <a href="javascript:void(0)" onclick="navigateTo('cart-view')"><i class="fa-solid fa-cart-shopping"></i> 0</a>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <section class="hero-section"></section>
+    <!-- ================= PAGE 1: HOME VIEW ================= -->
+    <main id="home-view" class="page-view active-view">
+        <section class="hero-section"></section>
 
-    <!-- Main Content Section -->
-    <section class="product-section">
-        <div class="product-container">
-            
-            <!-- Left Header Banner -->
-            <div class="info-block">
-                <h1>Only the Highest<br>Quality Ingredients</h1>
-                <p>In fact, we grow most of them ourselves on our 17-acre farm!</p>
-            </div>
-
-            <!-- Right Product Card -->
-            <div class="product-card">
-                <div class="image-wrapper">
-                    <span class="badge-sale">SALE</span>
-                    <!-- ATTACHED PRODUCT PACKAGING IMAGE HERE -->
-                    <img src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder 500g" class="product-pack-img">
+        <section class="product-section">
+            <div class="product-container">
+                <div class="info-block">
+                    <h1>Only the Highest<br>Quality Ingredients</h1>
+                    <p>In fact, we grow most of them ourselves on our 17-acre farm!</p>
                 </div>
-                
-                <div class="product-details">
-                    <h3>Sthirah Jaggery Powder 500G</h3>
-                    <p class="price">from ₹58.00</p>
-                    <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mattis orci cursus, lacinia nisl ac, tempor lorem. Duis in vestibulum felis, id molestie sapien. Nunc vel felis non massa pretium vehicula ut vitae diam. Aenean lobortis fringilla mollis. Nullam venenatis velit vitae magna congue vulputate. Nunc sagittis purus ligula.</p>
+
+                <div class="product-card">
+                    <!-- CLICK PRODUCT IMAGE TO GO TO PRODUCT PAGE -->
+                    <div class="image-wrapper clickable" onclick="navigateTo('product-view')">
+                        <span class="badge-sale">SALE</span>
+                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder 500g" class="product-pack-img">
+                    </div>
                     
-                    <div class="size-selector">
-                        <label for="size">Size:</label>
-                        <select id="size" name="size">
-                            <option value="" disabled selected>Select Size</option>
-                            <option value="500G">500G</option>
-                            <option value="1KG">1KG</option>
-                        </select>
+                    <div class="product-details">
+                        <!-- CLICK PRODUCT NAME TO GO TO PRODUCT PAGE -->
+                        <h3 class="product-title-link clickable" onclick="navigateTo('product-view')">Sthirah Jaggery Powder 500G</h3>
+                        <p class="price">from ₹58.00</p>
+                        
+                        <!-- ACCURATE BENEFITS WITHOUT RESTRICTED WORDS -->
+                        <ul class="benefits-list">
+                            <li><strong>Rich in Essential Minerals:</strong> Naturally packed with iron, potassium, magnesium, and calcium.</li>
+                            <li><strong>Digestive Support:</strong> Stimulates digestive enzymes, aiding post-meal digestion.</li>
+                            <li><strong>Sustained Energy:</strong> Unrefined sugar source providing complex carbohydrates for steady energy release.</li>
+                            <li><strong>Traditional Sweetener:</strong> Thoughtfully crafted directly from fresh sugarcane juice extracted on our farm.</li>
+                        </ul>
+                        
+                        <div class="size-selector">
+                            <label for="size">Size:</label>
+                            <select id="size" name="size">
+                                <option value="" disabled selected>Select Size</option>
+                                <option value="500G">500G</option>
+                                <option value="1KG">1KG</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+    </main>
 
+    <!-- ================= PAGE 2: PRODUCT PAGE VIEW ================= -->
+    <main id="product-view" class="page-view">
+        <div class="product-page-container">
+            <div class="product-page-image">
+                <img src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder 500g">
+            </div>
+            <div class="product-page-details">
+                <h1>Sthirah Cane Jaggery Powder</h1>
+                <p class="price-lg">₹58.00</p>
+                <hr style="margin-bottom:20px; border:0; border-top:1px solid #eee;">
+                <h3>Product Overview</h3>
+                <p style="font-size:14px; line-height:1.6; margin: 10px 0 20px 0;">
+                    Sthirah Jaggery Powder offers a rich, deep caramel sweetness harvested from carefully cultivated sugarcane grown on our 17-acre farm. Produced using traditional extraction methods, it maintains its natural mineral profile without added chemical processing or refining.
+                </p>
+                <h3>Key Health & Nutritional Benefits</h3>
+                <ul class="benefits-list" style="margin-top:10px;">
+                    <li><strong>High Iron Content:</strong> Supports healthy hemoglobin levels and active wellness.</li>
+                    <li><strong>Natural Cleansing Helper:</strong> Helps flush out unwanted toxins from the body naturally.</li>
+                    <li><strong>Great Refined Sugar Substitute:</strong> Enhances teas, coffees, desserts, and traditional recipes effortlessly.</li>
+                </ul>
+                <div class="size-selector" style="align-items:flex-start; margin-top:20px;">
+                    <label for="prod-size">Select Packaging Size:</label>
+                    <select id="prod-size" style="text-align-last:left;">
+                        <option value="500G">500G - ₹58.00</option>
+                        <option value="1KG">1KG - ₹110.00</option>
+                    </select>
+                </div>
+                <button class="btn-add-cart" onclick="alert('Item added to cart!')">ADD TO CART</button>
+            </div>
         </div>
-    </section>
+    </main>
+
+    <!-- ================= INDIVIDUAL SUBMENU PAGES ================= -->
+    
+    <!-- PRIVACY POLICY -->
+    <main id="privacy-policy-view" class="page-view">
+        <div class="content-page">
+            <h1>Privacy Policy</h1>
+            <p>At <strong>INVO STHIRAH FOODS HP LLP</strong>, we value your trust and are committed to protecting your personal information. This Privacy Policy outlines how we collect, use, and safeguard your data when visiting our website.</p>
+            <h2>Information Collection</h2>
+            <p>We collect basic details such as name, contact address, email, and billing details when you place an order or create an account with Sthirah.</p>
+            <h2>Data Protection</h2>
+            <p>Your details are stored securely and never shared or sold to third parties for independent marketing purposes.</p>
+            <div class="contact-box">
+                <strong>Brand Contact Details:</strong><br>
+                INVO STHIRAH FOODS HP LLP<br>
+                Email: customer-care@sthirah.in | Phone: +91 93630 22560
+            </div>
+        </div>
+    </main>
+
+    <!-- TRACK ORDER -->
+    <main id="track-order-view" class="page-view">
+        <div class="content-page">
+            <h1>Track Your Order</h1>
+            <p>Enter your Order ID and Billing Phone Number to view your current dispatch and delivery status.</p>
+            <div style="margin: 25px 0;">
+                <input type="text" placeholder="Order ID (e.g. STH-1042)" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
+                <input type="text" placeholder="Phone Number" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
+                <button class="btn-add-cart" style="width:auto; padding:10px 25px;">Track Status</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- TERMS & CONDITIONS -->
+    <main id="terms-view" class="page-view">
+        <div class="content-page">
+            <h1>Terms & Conditions</h1>
+            <p>Welcome to Sthirah. By browsing or purchasing through this store, you agree to comply with our online service policies.</p>
+            <h2>Product Details</h2>
+            <p>All items sold under INVO STHIRAH FOODS HP LLP are subject to stock availability and regional shipping constraints.</p>
+        </div>
+    </main>
+
+    <!-- SHIPPING POLICY -->
+    <main id="shipping-policy-view" class="page-view">
+        <div class="content-page">
+            <h1>Shipping Policy</h1>
+            <p>We process and dispatch sugarcane product orders within 24–48 business hours. Delivery typically arrives within 3–7 business days depending on geographical location.</p>
+        </div>
+    </main>
+
+    <!-- CANCELLATION & REFUND -->
+    <main id="refund-policy-view" class="page-view">
+        <div class="content-page">
+            <h1>Cancellation and Refund Policy</h1>
+            <p>Orders can be cancelled before dispatch. If you receive damaged packaging or incorrect goods, report the issue within 48 hours for immediate replacement or full refund assistance.</p>
+        </div>
+    </main>
+
+    <!-- ABOUT US -->
+    <main id="about-us-view" class="page-view">
+        <div class="content-page">
+            <h1>About Sthirah</h1>
+            <p><strong>Sthirah</strong> is built around a commitment to traditional farming and natural quality foods. Most of our raw ingredients are grown directly on our own 17-acre farm.</p>
+            <p>By relying on traditional harvesting and processing techniques, we bring wholesome ingredients directly to your household kitchen table.</p>
+            <div class="contact-box">
+                <strong>INVO STHIRAH FOODS HP LLP</strong><br>
+                Salem, Tamil Nadu, India.
+            </div>
+        </div>
+    </main>
+
+    <!-- PARTNER WITH US -->
+    <main id="partner-view" class="page-view">
+        <div class="content-page">
+            <h1>Partner With Us</h1>
+            <p>Interested in distributing or selling Sthirah products? We welcome collaborations with retail partners and bulk distributors.</p>
+            <p>Contact our partnership desk at <strong>customer-care@sthirah.in</strong> or call <strong>+91 93630 22560</strong>.</p>
+        </div>
+    </main>
+
+    <!-- MY ACCOUNT -->
+    <main id="account-view" class="page-view">
+        <div class="content-page">
+            <h1>My Account</h1>
+            <p>Login to view address details, profile settings, and recent purchases.</p>
+        </div>
+    </main>
+
+    <!-- ORDER HISTORY -->
+    <main id="history-view" class="page-view">
+        <div class="content-page">
+            <h1>Order History</h1>
+            <p>You have no recent order records in this session.</p>
+        </div>
+    </main>
+
+    <!-- CART VIEW -->
+    <main id="cart-view" class="page-view">
+        <div class="content-page">
+            <h1>Shopping Cart</h1>
+            <p>Your cart is currently empty.</p>
+            <button class="btn-add-cart" style="width:auto; margin-top:15px;" onclick="navigateTo('product-view')">Browse Products</button>
+        </div>
+    </main>
 
     <!-- Footer -->
     <footer class="site-footer">
@@ -351,34 +641,34 @@
                 <div class="footer-col">
                     <h4>Our Product</h4>
                     <ul>
-                        <li><a href="#" class="highlight-link">Jaggery Powder</a></li>
+                        <li><a href="javascript:void(0)" class="highlight-link" onclick="navigateTo('product-view')">Jaggery Powder</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
                     <h4>Terms & Conditions</h4>
                     <ul>
-                        <li><a href="#">Privacy policy</a></li>
-                        <li><a href="#">Track Order</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Shipping policy</a></li>
-                        <li><a href="#">Cancellation and Refund Policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('privacy-policy-view')">Privacy policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('track-order-view')">Track Order</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('terms-view')">Terms & Conditions</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('shipping-policy-view')">Shipping policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('refund-policy-view')">Cancellation and Refund Policy</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
                     <h4>Explore</h4>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Partner With US</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('about-us-view')">About Us</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('partner-view')">Partner With US</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
                     <h4>My Account</h4>
                     <ul>
-                        <li><a href="#">My Account</a></li>
-                        <li><a href="#">Order History</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('account-view')">My Account</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('history-view')">Order History</a></li>
                     </ul>
                 </div>
 
@@ -386,7 +676,7 @@
                     <div class="social-icons">
                         <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#"><i class="fa-regular fa-envelope"></i></a>
+                        <a href="mailto:customer-care@sthirah.in"><i class="fa-regular fa-envelope"></i></a>
                     </div>
                     <h4>Get In Touch</h4>
                 </div>
@@ -399,5 +689,32 @@
         <div class="cookie-notice">Cookie Preferences</div>
     </footer>
 
+    <!-- NAVIGATION ROUTING JAVASCRIPT -->
+    <script>
+        function navigateTo(viewId) {
+            // Hide all page views
+            const views = document.querySelectorAll('.page-view');
+            views.forEach(view => view.classList.remove('active-view'));
+
+            // Show selected page view
+            const targetView = document.getElementById(viewId);
+            if(targetView) {
+                targetView.classList.add('active-view');
+            }
+
+            // Update Nav link states
+            document.getElementById('nav-home').classList.remove('active');
+            document.getElementById('nav-shop').classList.remove('active');
+
+            if(viewId === 'home-view') {
+                document.getElementById('nav-home').classList.add('active');
+            } else if(viewId === 'product-view') {
+                document.getElementById('nav-shop').classList.add('active');
+            }
+
+            // Scroll smoothly back to top on page change
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
