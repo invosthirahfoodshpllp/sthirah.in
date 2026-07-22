@@ -323,7 +323,7 @@
         <div class="product-section">
             <div class="product-container">
                 <div style="flex:1; text-align:center; background:white; padding:30px; border-radius:8px;">
-                    <img src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder" style="max-height:380px; object-fit:contain;">
+                    <img id="shop-pimg-display" src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder" style="max-height:380px; object-fit:contain;">
                 </div>
                 <div style="flex:1; background:white; padding:30px; border-radius:8px;">
                     <h1>Sthirah Cane Jaggery Powder</h1>
@@ -440,7 +440,7 @@
     <main id="about-us-view" class="page-view"><div class="content-page"><h1>About Us</h1><p>Sthirah is based in Salem, Tamil Nadu.</p></div></main>
     <main id="partner-view" class="page-view"><div class="content-page"><h1>Partner With Us</h1><p>Email invosthirahfoodshpllp@gmail.com</p></div></main>
 
-    <!-- ================= 4. FULL PAGE ADMIN CONSOLE (UPDATED) ================= -->
+    <!-- ================= 4. FULL PAGE ADMIN CONSOLE (UPGRADED) ================= -->
     <main id="admin-view" class="page-view">
         <div id="admin-login-screen" style="max-width:400px; margin:60px auto; background:white; padding:30px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
             <h2>Admin / Staff Console</h2>
@@ -462,9 +462,10 @@
         <div id="admin-console-screen" class="admin-full-wrapper" style="display:none;">
             <div class="admin-top-nav">
                 <button class="active-admin-menu" onclick="switchAdminTab('tab-dash', this)">Dashboard</button>
-                <button onclick="switchAdminTab('tab-orders', this)">Orders & Batch Actions</button>
+                <button onclick="switchAdminTab('tab-orders', this)">Orders & Filtering</button>
+                <button onclick="switchAdminTab('tab-company', this)">Company Profile & Tax</button>
                 <button onclick="switchAdminTab('tab-billing', this)">Invoicing Prefix & Tax</button>
-                <button onclick="switchAdminTab('tab-products', this)">Edit Products & SKUs</button>
+                <button onclick="switchAdminTab('tab-products', this)">Edit Products & Images</button>
                 <button onclick="switchAdminTab('tab-rates', this)">State Shipping Matrix</button>
                 <button onclick="switchAdminTab('tab-reports', this)">Reports & Analytics</button>
                 <button onclick="adminLogoutManual()" style="background:#DC2626; margin-left:auto;">Logout</button>
@@ -480,13 +481,24 @@
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS & BATCH PROCESSING & INDIVIDUAL INVOICE PRINTING -->
+            <!-- TAB 2: ORDERS WITH ADVANCED FILTERING & CUSTOMIZABLE LABEL PRINT SIZES -->
             <div id="tab-orders" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-                        <h2>Order Management & Batch Processing</h2>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto;" onclick="batchUpdateConfirm()">Batch Save & Update Status</button>
+                        <h2>Order Management & Filter Controls</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <!-- ORDER STATUS FILTER DROPDOWN -->
+                            <label style="font-size:12px; font-weight:600;">Filter Orders:</label>
+                            <select id="admin-order-filter" class="admin-input-sm" style="width:auto; padding:6px 12px;" onchange="filterAdminOrders()">
+                                <option value="ALL">All Orders</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+
+                            <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto;" onclick="batchUpdateConfirm()">Batch Save Status</button>
                             <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto; background:#334155;" onclick="batchPrintLabels()">Batch Print Labels</button>
                         </div>
                     </div>
@@ -504,7 +516,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-orders-table-body">
-                            <tr>
+                            <tr data-status="Processing">
                                 <td><input type="checkbox" class="order-select-chk"></td>
                                 <td>STH/2026/101</td>
                                 <td>Ramesh Kumar<br><small>Mob: 9876543210 (Alt: 9123456789)</small></td>
@@ -512,23 +524,58 @@
                                 <td>2KG (4 x 500g Packs)</td>
                                 <td>
                                     <select class="admin-input-sm" style="padding:4px;">
+                                        <option value="Confirmed">Confirmed</option>
                                         <option value="Processing" selected>Processing</option>
                                         <option value="Dispatched">Dispatched</option>
                                         <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
                                     </select>
                                 </td>
                                 <td>
                                     <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="generateQRPreview('STH/2026/101', 'Ramesh Kumar', '9876543210', '9123456789', 'Door 12, Main Street, Salem, TN')">QR Label</button>
-                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualInvoice('STH/2026/101', 'Ramesh Kumar', '9876543210', 'Door 12, Main Street, Salem, TN', '2KG Jaggery Powder', '220')">Print Invoice</button>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('STH/2026/101', 'Ramesh Kumar', '9876543210', 'Door 12, Main Street, Salem, TN', '2KG Jaggery Powder', 220)">GST Invoice</button>
+                                </td>
+                            </tr>
+                            <tr data-status="Confirmed">
+                                <td><input type="checkbox" class="order-select-chk"></td>
+                                <td>STH/2026/102</td>
+                                <td>Suresh Raina<br><small>Mob: 9765432109</small></td>
+                                <td>Plot 45, Anna Nagar, Chennai, TN</td>
+                                <td>1KG (2 x 500g Packs)</td>
+                                <td>
+                                    <select class="admin-input-sm" style="padding:4px;">
+                                        <option value="Confirmed" selected>Confirmed</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Dispatched">Dispatched</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="generateQRPreview('STH/2026/102', 'Suresh Raina', '9765432109', '', 'Plot 45, Anna Nagar, Chennai, TN')">QR Label</button>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('STH/2026/102', 'Suresh Raina', '9765432109', 'Plot 45, Anna Nagar, Chennai, TN', '1KG Jaggery Powder', 110)">GST Invoice</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
+                <!-- QR DISPLAY BOX WITH CUSTOM PRINT SIZE CONTROL -->
                 <div id="qr-display-box" class="admin-card-box" style="display:none;">
-                    <h3>Logistics Shipping & QR Label</h3>
-                    <div style="background:#fafafa; padding:20px; border:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap;">
+                        <h3>Logistics Shipping Sticker & QR Code</h3>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <label style="font-size:12px; font-weight:600;">Print Sticker Size:</label>
+                            <select id="sticker-size-select" class="admin-input-sm" style="width:auto;" onchange="resizeStickerBox()">
+                                <option value="standard">4" x 6" Shipping Label (Standard)</option>
+                                <option value="compact">3" x 2" Compact Sticker</option>
+                                <option value="a4">A4 Full Sheet Label</option>
+                            </select>
+                            <button class="btn-action" style="width:auto; padding:6px 12px; font-size:12px;" onclick="window.print()">Print Sticker</button>
+                        </div>
+                    </div>
+
+                    <div id="sticker-container-box" style="background:#fafafa; padding:20px; border:1px dashed #ccc; display:flex; justify-content:space-between; align-items:center; max-width:550px; margin:0 auto;">
                         <div>
                             <h4 id="qr-cust-name">Customer Name</h4>
                             <p id="qr-cust-phone" style="font-size:13px; color:#555;"></p>
@@ -539,7 +586,44 @@
                 </div>
             </div>
 
-            <!-- TAB 3: INVOICING PREFIX & TAX SETTINGS WITH CONFIRMATION -->
+            <!-- TAB 3: COMPANY DETAILS UPDATE MENU (SEPARATE) -->
+            <div id="tab-company" class="admin-panel-tab">
+                <div class="admin-card-box" style="max-width:700px;">
+                    <h2>Company Details & Legal Profile Management</h2>
+                    <br>
+                    <div class="form-group">
+                        <label>Registered Company Name</label>
+                        <input type="text" id="comp-name-input" value="INVO STHIRAH FOODS HP LLP">
+                    </div>
+                    <div class="form-group">
+                        <label>Registered Office Address</label>
+                        <textarea id="comp-addr-input" rows="3">No. 620, Ashok Nagar, Sanniyasigundu, Kitchipalyam, Salem, Tamil Nadu - 636015.</textarea>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label>Contact Email Address</label>
+                            <input type="email" id="comp-email-input" value="invosthirahfoodshpllp@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Phone Number</label>
+                            <input type="text" id="comp-phone-input" value="+91 93637 02560">
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label>GSTIN Number</label>
+                            <input type="text" id="comp-gst-input" value="33AAAAA0000A1Z5">
+                        </div>
+                        <div class="form-group">
+                            <label>FSSAI License Number</label>
+                            <input type="text" id="comp-fssai-input" value="12426018000042">
+                        </div>
+                    </div>
+                    <button class="btn-action" onclick="saveCompanyDetailsConfirm()">Save Company Profile</button>
+                </div>
+            </div>
+
+            <!-- TAB 4: INVOICING PREFIX & TAX SETTINGS -->
             <div id="tab-billing" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:600px;">
                     <h2>Invoice System Configuration</h2>
@@ -550,27 +634,28 @@
                     </div>
                     <div class="form-group">
                         <label>Next Sequence Number</label>
-                        <input type="number" id="adm-seq-input" value="102">
+                        <input type="number" id="adm-seq-input" value="103">
                     </div>
                     <div class="form-group">
-                        <label>Company GST / Tax ID Number</label>
-                        <input type="text" id="adm-gst-input" value="33AAAAA0000A1Z5">
+                        <label>Jaggery Powder HSN / SAC Code</label>
+                        <input type="text" id="adm-hsn-input" value="17011490">
                     </div>
                     <button class="btn-action" onclick="saveInvoiceConfigWithConfirm()">Save Invoice Settings</button>
                 </div>
             </div>
 
-            <!-- TAB 4: EDITABLE PRODUCT CATALOG & SKU MANAGEMENT WITH PROMPT CONFIRMATION -->
+            <!-- TAB 5: EDITABLE PRODUCT CATALOG & PRODUCT IMAGE UPLOAD -->
             <div id="tab-products" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h2>Product Catalog & SKU Controls (Edit & Save)</h2>
+                        <h2>Product Catalog & Image Editor</h2>
                         <button class="btn-action" style="width:auto; padding:8px 15px;" onclick="addNewSkuRow()">+ Add New Product Variant</button>
                     </div>
 
                     <table class="admin-table">
                         <thead>
                             <tr>
+                                <th>Product Image</th>
                                 <th>Category</th>
                                 <th>SKU Code</th>
                                 <th>Pack Variant / Size</th>
@@ -581,6 +666,12 @@
                         </thead>
                         <tbody id="admin-sku-table-body">
                             <tr>
+                                <td>
+                                    <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="admin-pimg-preview" style="width:40px; height:40px; object-fit:contain; border:1px solid #ccc; border-radius:4px;">
+                                        <input type="file" accept="image/*" style="font-size:10px; width:130px;" onchange="previewAdminProductImage(this)">
+                                    </div>
+                                </td>
                                 <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
                                 <td><input type="text" class="admin-input-sm" value="STH-JAG-0500"></td>
                                 <td><input type="text" class="admin-input-sm" value="500G Base Packet"></td>
@@ -589,6 +680,12 @@
                                 <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
                             </tr>
                             <tr>
+                                <td>
+                                    <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="admin-pimg-preview" style="width:40px; height:40px; object-fit:contain; border:1px solid #ccc; border-radius:4px;">
+                                        <input type="file" accept="image/*" style="font-size:10px; width:130px;" onchange="previewAdminProductImage(this)">
+                                    </div>
+                                </td>
                                 <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
                                 <td><input type="text" class="admin-input-sm" value="STH-JAG-1000"></td>
                                 <td><input type="text" class="admin-input-sm" value="1KG Bundle (2 Packs)"></td>
@@ -596,25 +693,16 @@
                                 <td><input type="number" class="admin-input-sm" value="240"></td>
                                 <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
                             </tr>
-                            <tr>
-                                <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
-                                <td><input type="text" class="admin-input-sm" value="STH-JAG-2000"></td>
-                                <td><input type="text" class="admin-input-sm" value="2KG Bundle (4 Packs)"></td>
-                                <td><input type="number" class="admin-input-sm" value="220"></td>
-                                <td><input type="number" class="admin-input-sm" value="120"></td>
-                                <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- TAB 5: ALL-STATE SHIPPING MATRIX WITH INDIVIDUAL EDITING & SAVING -->
+            <!-- TAB 6: ALL-STATE SHIPPING MATRIX -->
             <div id="tab-rates" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <h2>All-State Shipping Rates & Delivery Timelines</h2>
-                    <p style="font-size:12px; color:#666; margin-bottom:15px;">Configure individual shipping fees and delivery timelines for all states and territories.</p>
-                    
+                    <br>
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -625,13 +713,13 @@
                             </tr>
                         </thead>
                         <tbody id="admin-shipping-table-body">
-                            <!-- Populated Dynamically via JavaScript for All States -->
+                            <!-- Populated Dynamically via JavaScript -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- TAB 6: REPORT GENERATOR & ANALYTICS -->
+            <!-- TAB 7: REPORT GENERATOR & ANALYTICS -->
             <div id="tab-reports" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:700px;">
                     <h2>Report Generator</h2>
@@ -647,31 +735,67 @@
                     <button class="btn-action" onclick="generateAndPrintReport()">Generate & Print Report</button>
                 </div>
             </div>
-
-            <!-- TAB 7: STAFF PERMISSIONS -->
-            <div id="tab-staff" class="admin-panel-tab"><div class="admin-card-box"><h2>Staff Roles & Permissions</h2><br><p>Super Admin: Full System Access</p></div></div>
         </div>
     </main>
 
-    <!-- PRINTABLE INVOICE POPUP CONTAINER -->
-    <div id="printable-invoice-area" style="display:none; padding:30px; background:white; font-family:sans-serif;">
-        <h2 style="color:#116B32;">INVO STHIRAH FOODS HP LLP</h2>
-        <p>Salem, Tamil Nadu | Email: invosthirahfoodshpllp@gmail.com | Phone: +91 93637 02560</p>
-        <hr style="margin:15px 0;">
-        <h3>TAX INVOICE / DELIVERY CHALLAN</h3>
-        <p id="inv-print-num"><strong>Invoice #:</strong> </p>
-        <p id="inv-print-date"><strong>Date:</strong> </p>
-        <br>
-        <h4>Customer Delivery Details</h4>
-        <p id="inv-print-cust"></p>
-        <p id="inv-print-addr"></p>
-        <br>
-        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse;">
-            <thead><tr style="background:#f2f2f2;"><th>Item Description</th><th>Packaging</th><th>Amount (₹)</th></tr></thead>
-            <tbody><tr><td id="inv-print-item"></td><td>500g Base Unit Bundles</td><td id="inv-print-amt"></td></tr></tbody>
+    <!-- PROPER ITEMIZE GST INVOICE POPUP AREA -->
+    <div id="printable-invoice-area" style="display:none; padding:40px; background:white; font-family:sans-serif; color:#111;">
+        <div style="display:flex; justify-content:space-between; border-bottom:2px solid #116B32; padding-bottom:15px;">
+            <div>
+                <h2 id="gst-print-comp-name" style="color:#116B32;">INVO STHIRAH FOODS HP LLP</h2>
+                <p id="gst-print-comp-addr" style="font-size:12px; color:#444; max-width:400px; margin-top:5px;"></p>
+                <p id="gst-print-comp-contact" style="font-size:12px; color:#444; margin-top:3px;"></p>
+            </div>
+            <div style="text-align:right;">
+                <h3 style="color:#333;">TAX INVOICE</h3>
+                <p id="gst-print-inv-no" style="font-size:13px; font-weight:bold; margin-top:5px;"></p>
+                <p id="gst-print-inv-date" style="font-size:12px; color:#555;"></p>
+                <p id="gst-print-comp-gst" style="font-size:12px; font-weight:bold; margin-top:3px;"></p>
+                <p id="gst-print-comp-fssai" style="font-size:12px; color:#555;"></p>
+            </div>
+        </div>
+
+        <div style="margin:20px 0; background:#f9f9f9; padding:15px; border-radius:4px; border:1px solid #eee;">
+            <h4 style="margin-bottom:8px; color:#116B32;">Billed To / Shipping Address:</h4>
+            <p id="gst-print-cust-name" style="font-weight:bold; font-size:14px;"></p>
+            <p id="gst-print-cust-phone" style="font-size:13px; color:#444;"></p>
+            <p id="gst-print-cust-addr" style="font-size:13px; color:#444; margin-top:3px;"></p>
+        </div>
+
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:13px; margin-bottom:20px;">
+            <thead>
+                <tr style="background:#E2E8F0;">
+                    <th>Item Description</th>
+                    <th>HSN / SAC</th>
+                    <th>Qty (500g Packs)</th>
+                    <th>Taxable Value</th>
+                    <th>CGST (2.5%)</th>
+                    <th>SGST (2.5%)</th>
+                    <th>Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="gst-print-item-desc">Sthirah Cane Jaggery Powder</td>
+                    <td id="gst-print-hsn">17011490</td>
+                    <td id="gst-print-qty">2 Packs</td>
+                    <td id="gst-print-taxable">₹209.52</td>
+                    <td id="gst-print-cgst">₹5.24</td>
+                    <td id="gst-print-sgst">₹5.24</td>
+                    <td id="gst-print-item-total" style="font-weight:bold;">₹220.00</td>
+                </tr>
+            </tbody>
         </table>
-        <br>
-        <p style="text-align:right; font-weight:bold;" id="inv-print-total"></p>
+
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div style="font-size:11px; color:#666;">
+                <p>This is a computer generated tax invoice.</p>
+                <p>Thank you for choosing Sthirah traditional farm products!</p>
+            </div>
+            <div style="text-align:right; font-size:14px;">
+                <p><strong>Grand Total: <span id="gst-print-grand-total" style="color:#116B32; font-size:18px;">₹220.00</span></strong></p>
+            </div>
+        </div>
     </div>
 
     <!-- GLOBAL FOOTER -->
@@ -863,6 +987,7 @@
 
             const tbody = document.getElementById('admin-orders-table-body');
             const tr = document.createElement('tr');
+            tr.setAttribute('data-status', 'Confirmed');
             tr.innerHTML = `
                 <td><input type="checkbox" class="order-select-chk"></td>
                 <td>${invoiceId}</td>
@@ -871,14 +996,16 @@
                 <td>Cart Order</td>
                 <td>
                     <select class="admin-input-sm" style="padding:4px;">
-                        <option value="Processing" selected>Processing</option>
+                        <option value="Confirmed" selected>Confirmed</option>
+                        <option value="Processing">Processing</option>
                         <option value="Dispatched">Dispatched</option>
                         <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
                     </select>
                 </td>
                 <td>
                     <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="generateQRPreview('${invoiceId}', '${name}', '${mobile}', '${altMobile}', '${fullAddress}')">QR Label</button>
-                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualInvoice('${invoiceId}', '${name}', '${mobile}', '${fullAddress}', 'Cart Items', '350')">Print Invoice</button>
+                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('${invoiceId}', '${name}', '${mobile}', '${fullAddress}', 'Cart Items', 350)">GST Invoice</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -890,7 +1017,93 @@
             navigateTo('home-view');
         }
 
-        /* ADMIN CONFIRMATION PROMPT HANDLERS & EDIT SAVING */
+        /* ADMIN ORDER FILTER SYSTEM */
+        function filterAdminOrders() {
+            const filterVal = document.getElementById('admin-order-filter').value;
+            const rows = document.querySelectorAll('#admin-orders-table-body tr');
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status') || row.querySelector('select').value;
+                if(filterVal === "ALL" || status === filterVal) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        /* PREVIEW PRODUCT IMAGE UPLOAD IN ADMIN */
+        function previewAdminProductImage(fileInput) {
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgTag = fileInput.previousElementSibling;
+                    imgTag.src = e.target.result;
+                    // Also update frontend shop display preview
+                    document.getElementById('shop-pimg-display').src = e.target.result;
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        /* SAVE COMPANY PROFILE WITH CONFIRMATION */
+        function saveCompanyDetailsConfirm() {
+            if(confirm("Are you sure you want to update company details and tax profile?")) {
+                alert("Company Legal Details & Tax Profile Saved!");
+            }
+        }
+
+        /* RESIZE SHIPPING STICKER PRINT BOX */
+        function resizeStickerBox() {
+            const val = document.getElementById('sticker-size-select').value;
+            const box = document.getElementById('sticker-container-box');
+            if(val === 'compact') {
+                box.style.maxWidth = "350px";
+                box.style.padding = "10px";
+            } else if(val === 'a4') {
+                box.style.maxWidth = "750px";
+                box.style.padding = "30px";
+            } else {
+                box.style.maxWidth = "550px";
+                box.style.padding = "20px";
+            }
+        }
+
+        /* PRINT PROPER ITEMIZED GST INVOICE */
+        function printIndividualGSTInvoice(inv, name, mob, addr, item, totalAmt) {
+            document.getElementById('gst-print-comp-name').innerText = document.getElementById('comp-name-input').value;
+            document.getElementById('gst-print-comp-addr').innerText = document.getElementById('comp-addr-input').value;
+            document.getElementById('gst-print-comp-contact').innerText = "Email: " + document.getElementById('comp-email-input').value + " | Tel: " + document.getElementById('comp-phone-input').value;
+            document.getElementById('gst-print-comp-gst').innerText = "GSTIN: " + document.getElementById('comp-gst-input').value;
+            document.getElementById('gst-print-comp-fssai').innerText = "FSSAI Lic No: " + document.getElementById('comp-fssai-input').value;
+
+            document.getElementById('gst-print-inv-no').innerText = "Invoice No: " + inv;
+            document.getElementById('gst-print-inv-date').innerText = "Date: " + new Date().toLocaleDateString();
+            document.getElementById('gst-print-cust-name').innerText = name;
+            document.getElementById('gst-print-cust-phone').innerText = "Contact: " + mob;
+            document.getElementById('gst-print-cust-addr').innerText = addr;
+
+            document.getElementById('gst-print-item-desc').innerText = item;
+            document.getElementById('gst-print-hsn').innerText = document.getElementById('adm-hsn-input').value;
+            
+            // Calculate GST 5% Split (Taxable = Total / 1.05)
+            const total = parseFloat(totalAmt);
+            const taxable = (total / 1.05).toFixed(2);
+            const gstAmount = (total - taxable).toFixed(2);
+            const halfGst = (gstAmount / 2).toFixed(2);
+
+            document.getElementById('gst-print-taxable').innerText = "₹" + taxable;
+            document.getElementById('gst-print-cgst').innerText = "₹" + halfGst;
+            document.getElementById('gst-print-sgst').innerText = "₹" + halfGst;
+            document.getElementById('gst-print-item-total').innerText = "₹" + total.toFixed(2);
+            document.getElementById('gst-print-grand-total').innerText = "₹" + total.toFixed(2);
+
+            const printArea = document.getElementById('printable-invoice-area');
+            printArea.style.display = "block";
+            window.print();
+            printArea.style.display = "none";
+        }
+
+        /* ADMIN CONFIRMATION PROMPTS */
         function saveRowWithConfirm(btnElement) {
             if (confirm("Are you sure you want to save these changes?")) {
                 btnElement.style.background = "#0c4d24";
@@ -915,7 +1128,13 @@
                 const tbody = document.getElementById('admin-sku-table-body');
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><input type="text" class="admin-input-sm" value="New Category"></td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                            <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="admin-pimg-preview" style="width:40px; height:40px; object-fit:contain; border:1px solid #ccc; border-radius:4px;">
+                            <input type="file" accept="image/*" style="font-size:10px; width:130px;" onchange="previewAdminProductImage(this)">
+                        </div>
+                    </td>
+                    <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
                     <td><input type="text" class="admin-input-sm" value="STH-NEW-01"></td>
                     <td><input type="text" class="admin-input-sm" value="1KG Pack"></td>
                     <td><input type="number" class="admin-input-sm" value="100"></td>
@@ -948,21 +1167,6 @@
                 return;
             }
             window.print();
-        }
-
-        function printIndividualInvoice(inv, name, mob, addr, item, total) {
-            document.getElementById('inv-print-num').innerHTML = "<strong>Invoice #:</strong> " + inv;
-            document.getElementById('inv-print-date').innerHTML = "<strong>Date:</strong> " + new Date().toLocaleDateString();
-            document.getElementById('inv-print-cust').innerText = name + " | Mob: " + mob;
-            document.getElementById('inv-print-addr').innerText = addr;
-            document.getElementById('inv-print-item').innerText = item;
-            document.getElementById('inv-print-amt').innerText = "₹" + total;
-            document.getElementById('inv-print-total').innerText = "Total Paid: ₹" + total;
-
-            const printArea = document.getElementById('printable-invoice-area');
-            printArea.style.display = "block";
-            window.print();
-            printArea.style.display = "none";
         }
 
         function generateAndPrintReport() {
