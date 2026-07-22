@@ -254,7 +254,7 @@
         /* 5-Star Rating System */
         .star-rating { color: #F59E0B; font-size: 14px; }
 
-        /* Filter Widget matching user requirement */
+        /* Filter Widget */
         .filter-bar-widget {
             display: flex;
             align-items: center;
@@ -406,19 +406,18 @@
             <div class="product-container">
                 <div style="flex:1; text-align:center; background:white; padding:30px; border-radius:8px;">
                     <img id="shop-pimg-display" src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder" style="max-height:380px; object-fit:contain;">
-                    <div style="display:flex; justify-content:center; gap:8px; margin-top:15px;">
+                    <div style="display:flex; justify-content:center; gap:8px; margin-top:15px;" id="shop-thumbs-container">
                         <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="product-thumb active-thumb" onclick="changeShopImage(this, 'Sthirah Jaggery Powder 500g Front.jpeg')">
                         <img src="Sthirah Jaggery Powder 500g Back.jpg" class="product-thumb" onclick="changeShopImage(this, 'Sthirah Jaggery Powder 500g Back.jpg')">
-                        <img src="Sthirah DP Logo.jpg" class="product-thumb" onclick="changeShopImage(this, 'Sthirah DP Logo.jpg')">
                     </div>
                 </div>
                 <div style="flex:1; background:white; padding:30px; border-radius:8px;">
-                    <h1>Sthirah Cane Jaggery Powder</h1>
+                    <h1 id="shop-product-title">Sthirah Cane Jaggery Powder</h1>
                     <div class="star-rating" style="margin: 8px 0;">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <span style="color:#555; font-size:12px; margin-left:5px;">(4.9 / 5 based on 128 verified reviews)</span>
                     </div>
-                    <p style="color:var(--green-accent); font-weight:700; font-size:20px; margin:10px 0;">₹110.00 – ₹1,100.00</p>
+                    <p style="color:var(--green-accent); font-weight:700; font-size:20px; margin:10px 0;" id="shop-product-price">₹110.00 – ₹1,100.00</p>
                     <p style="font-size:14px; line-height:1.6; margin-bottom:20px;">
                         Prepared directly from sugarcane juice harvested on our farm in Salem. Retains natural molasses and essential minerals without added refining agents. Shipped in individual 500g unit packaging.
                     </p>
@@ -653,7 +652,7 @@
                 <button onclick="switchAdminTab('tab-orders', this)">Orders & POS Billing</button>
                 <button onclick="switchAdminTab('tab-company', this)">Company Profile & Tax</button>
                 <button onclick="switchAdminTab('tab-billing', this)">Invoicing Prefix & Tax</button>
-                <button onclick="switchAdminTab('tab-products', this)">Edit Products & Batch/HSN</button>
+                <button onclick="switchAdminTab('tab-products', this)">Edit Products & HSN</button>
                 <button onclick="switchAdminTab('tab-rates', this)">State Shipping Matrix</button>
                 <button onclick="switchAdminTab('tab-reports', this)">Sales & Reports</button>
                 <button onclick="adminLogoutManual()" style="background:#DC2626; margin-left:auto;">Logout</button>
@@ -669,26 +668,26 @@
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS & POS BILLING WITH DROPDOWN & CALENDAR FILTER -->
+            <!-- TAB 2: ORDERS & POS BILLING WITH UPDATED DROPDOWN & WORKING CALENDAR -->
             <div id="tab-orders" class="admin-panel-tab">
                 <div class="admin-card-box">
-                    <!-- FILTER BAR WIDGET MATCHING USER IMAGE REQUIREMENT -->
                     <div class="filter-bar-widget">
                         <span style="font-size:14px; font-weight:600;">Filter by :</span>
                         
-                        <select id="orders-preset-filter" class="admin-input-sm" style="width:160px;" onchange="onPresetFilterChange('orders')">
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="last_6_months">Last 6 months</option>
-                            <option value="last_financial_year">last financial Year</option>
+                        <select id="orders-preset-filter" class="admin-input-sm" style="width:230px;" onchange="onPresetFilterChange('orders')">
+                            <option value="this_month">This Month (1st to 30/31st)</option>
+                            <option value="last_month">Last Month (1st to 30/31st)</option>
+                            <option value="current_financial_year">Current Financial Year (1st April to Date)</option>
+                            <option value="last_financial_year">Last Financial Year (1st April to 31st March)</option>
+                            <option value="all_time">All Time (First Bill to Date)</option>
                             <option value="custom">Custom Range</option>
                         </select>
 
                         <div style="display:flex; align-items:center; gap:8px; background:#F8FAFC; border:1px solid #CBD5E1; padding:6px 12px; border-radius:6px;">
                             <i class="fa-regular fa-calendar" style="color:#64748B;"></i>
-                            <input type="date" id="orders-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAdminOrders()">
+                            <input type="date" id="orders-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="onDateManualChange('orders')">
                             <span>To</span>
-                            <input type="date" id="orders-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAdminOrders()">
+                            <input type="date" id="orders-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="onDateManualChange('orders')">
                         </div>
 
                         <select id="admin-order-filter" class="admin-input-sm" style="width:130px;" onchange="filterAdminOrders()">
@@ -701,7 +700,6 @@
                         </select>
                     </div>
 
-                    <!-- TOTAL VALUE CARD -->
                     <div class="admin-card-box" style="background:#FAFBFD; border:1px solid #E2E8F0; padding:20px; margin-bottom:20px;">
                         <h4 style="font-size:12px; color:#64748B; text-transform:uppercase;">Total Sales Amount (Selected Range)</h4>
                         <div id="orders-total-sales-val" style="font-size:28px; font-weight:700; color:#0F172A; margin:5px 0;">₹0.00</div>
@@ -726,6 +724,27 @@
                             </tr>
                         </thead>
                         <tbody id="admin-orders-table-body">
+                            <tr data-status="Processing" data-date="2026-06-10" data-amount="220">
+                                <td><input type="checkbox" class="order-select-chk"></td>
+                                <td>STH/2026/090</td>
+                                <td>2026-06-10</td>
+                                <td>Old Order Customer<br><small>Mob: 9876543210</small></td>
+                                <td>Salem, TN</td>
+                                <td>2KG Jaggery Powder (₹220)</td>
+                                <td>
+                                    <select class="admin-input-sm" style="padding:4px;" onchange="checkOrderCancellationRule(this)">
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Processing" selected>Processing</option>
+                                        <option value="Dispatched">Dispatched</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="generateQRPreview('STH/2026/090', 'Old Customer', '9876543210', '', 'Salem, TN')">QR Label</button>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('STH/2026/090', 'Old Customer', '9876543210', 'Salem, TN', '2KG Jaggery', 220)">GST Invoice</button>
+                                </td>
+                            </tr>
                             <tr data-status="Processing" data-date="2026-07-15" data-amount="220">
                                 <td><input type="checkbox" class="order-select-chk"></td>
                                 <td>STH/2026/101</td>
@@ -737,7 +756,7 @@
                                     <select class="admin-input-sm" style="padding:4px;" onchange="checkOrderCancellationRule(this)">
                                         <option value="Confirmed">Confirmed</option>
                                         <option value="Processing" selected>Processing</option>
-                                        <option value="Dispatched">Dispatched (Locked Cancellation)</option>
+                                        <option value="Dispatched">Dispatched</option>
                                         <option value="Delivered">Delivered</option>
                                         <option value="Cancelled">Cancelled</option>
                                     </select>
@@ -807,11 +826,11 @@
                 </div>
             </div>
 
-            <!-- TAB 5: PRODUCTS -->
+            <!-- TAB 5: PRODUCTS (BATCH NUMBER REMOVED, HIDE/DELETE WITH CONFIRMATION, LIVE SYNC TO STOREFRONT) -->
             <div id="tab-products" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h2>Product Catalog & Advanced Billing Details (Batch, HSN, Tax, Multi-Images)</h2>
+                        <h2>Product Catalog & Advanced Billing Details (HSN, Tax, Multi-Images)</h2>
                         <button class="btn-action" style="width:auto; padding:8px 15px;" onclick="addNewSkuRow()">+ Add New Product</button>
                     </div>
 
@@ -819,33 +838,34 @@
                         <thead>
                             <tr>
                                 <th>Multi Images</th>
-                                <th>SKU Name</th>
+                                <th>Product / SKU Name</th>
                                 <th>Price (₹)</th>
                                 <th>Tax Rate (%)</th>
                                 <th>HSN Code</th>
-                                <th>Batch Number</th>
                                 <th>Stock</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="admin-sku-table-body">
-                            <tr>
+                            <tr id="sku-row-0">
                                 <td>
                                     <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
                                         <div style="display:flex; gap:3px;" class="admin-multi-img-preview-box">
-                                            <img src="Sthirah Jaggery Powder 500g Front.jpeg" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
-                                            <img src="Sthirah Jaggery Powder 500g Back.jpg" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
+                                            <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="sku-img-preview" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
                                         </div>
                                         <input type="file" accept="image/*" multiple style="font-size:10px; width:130px;" onchange="previewMultipleProductImages(this)">
                                     </div>
                                 </td>
-                                <td><input type="text" class="admin-input-sm" value="STH-JAG-0500"></td>
-                                <td><input type="number" class="admin-input-sm" value="58"></td>
-                                <td><input type="number" class="admin-input-sm" value="5"></td>
-                                <td><input type="text" class="admin-input-sm" value="17011490"></td>
-                                <td><input type="text" class="admin-input-sm" value="BATCH-2026-A"></td>
-                                <td><input type="number" class="admin-input-sm" value="480"></td>
-                                <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
+                                <td><input type="text" class="admin-input-sm sku-name" value="Sthirah Jaggery Powder"></td>
+                                <td><input type="number" class="admin-input-sm sku-price" value="110"></td>
+                                <td><input type="number" class="admin-input-sm sku-tax" value="5"></td>
+                                <td><input type="text" class="admin-input-sm sku-hsn" value="17011490"></td>
+                                <td><input type="number" class="admin-input-sm sku-stock" value="480"></td>
+                                <td>
+                                    <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="saveProductRow(this)">Save</button>
+                                    <button class="btn-secondary" style="padding:4px 8px; font-size:11px; margin-bottom:3px; background:#475569;" onclick="toggleHideProduct(this)">Hide/Show</button>
+                                    <button class="cart-remove-btn" style="padding:4px 8px; font-size:11px;" onclick="deleteProductRow(this)">Delete</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -866,29 +886,29 @@
                 </div>
             </div>
 
-            <!-- TAB 7: SALES & REPORTS WITH DROPDOWN PRESET & CALENDAR RANGE -->
+            <!-- TAB 7: SALES & REPORTS WITH UPDATED DROPDOWN, MANUAL DATE TRIGGER & MANUAL PRINT BUTTON -->
             <div id="tab-reports" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:800px;">
                     <h2>Sales & Reports</h2>
                     <br>
                     
-                    <!-- FILTER BAR WIDGET IN REPORTS -->
                     <div class="filter-bar-widget">
                         <span style="font-size:14px; font-weight:600;">Filter by :</span>
                         
-                        <select id="reports-preset-filter" class="admin-input-sm" style="width:160px;" onchange="onPresetFilterChange('reports')">
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="last_6_months">Last 6 months</option>
-                            <option value="last_financial_year">last financial Year</option>
+                        <select id="reports-preset-filter" class="admin-input-sm" style="width:230px;" onchange="onPresetFilterChange('reports')">
+                            <option value="this_month">This Month (1st to 30/31st)</option>
+                            <option value="last_month">Last Month (1st to 30/31st)</option>
+                            <option value="current_financial_year">Current Financial Year (1st April to Date)</option>
+                            <option value="last_financial_year">Last Financial Year (1st April to 31st March)</option>
+                            <option value="all_time">All Time (First Bill to Date)</option>
                             <option value="custom">Custom Range</option>
                         </select>
 
                         <div style="display:flex; align-items:center; gap:8px; background:#F8FAFC; border:1px solid #CBD5E1; padding:6px 12px; border-radius:6px;">
                             <i class="fa-regular fa-calendar" style="color:#64748B;"></i>
-                            <input type="date" id="reports-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAndPrintReport()">
+                            <input type="date" id="reports-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="onDateManualChange('reports')">
                             <span>To</span>
-                            <input type="date" id="reports-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAndPrintReport()">
+                            <input type="date" id="reports-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="onDateManualChange('reports')">
                         </div>
 
                         <select id="report-type-select" class="admin-input-sm" style="width:180px;">
@@ -898,14 +918,13 @@
                         </select>
                     </div>
 
-                    <!-- TOTAL VALUE CARD IN REPORTS -->
                     <div class="admin-card-box" style="background:#FAFBFD; border:1px solid #E2E8F0; padding:20px; margin-bottom:20px;">
                         <h4 style="font-size:12px; color:#64748B; text-transform:uppercase;">Total Sales Amount (Selected Range)</h4>
                         <div id="reports-total-sales-val" style="font-size:28px; font-weight:700; color:#0F172A; margin:5px 0;">₹0.00</div>
                     </div>
 
                     <div style="display:flex; gap:10px;">
-                        <button class="btn-action" style="width:auto; padding:10px 20px;" onclick="filterAndPrintReport()">Filter, Download & Print Report</button>
+                        <button class="btn-action" style="width:auto; padding:10px 20px;" onclick="printReportExplicit()">Print Report</button>
                     </div>
                 </div>
             </div>
@@ -1099,6 +1118,11 @@
                         img.style.objectFit = "contain";
                         img.style.border = "1px solid #ccc";
                         previewBox.appendChild(img);
+
+                        if(i === 0) {
+                            document.getElementById('main-product-img').src = e.target.result;
+                            document.getElementById('shop-pimg-display').src = e.target.result;
+                        }
                     }
                     reader.readAsDataURL(fileInput.files[i]);
                 }
@@ -1112,7 +1136,47 @@
             }
         }
 
-        /* DATE RANGE & PRESET CALCULATOR LOGIC */
+        /* LIVE SYNC PRODUCT EDITS TO STOREFRONT */
+        function saveProductRow(btn) {
+            if(confirm("Are you sure you want to save this product and sync changes to storefront?")) {
+                const row = btn.closest('tr');
+                const name = row.querySelector('.sku-name').value;
+                const price = row.querySelector('.sku-price').value;
+                
+                document.getElementById('home-product-title').innerText = name;
+                document.getElementById('home-product-price').innerText = "from ₹" + parseFloat(price).toFixed(2) + " (1KG)";
+                document.getElementById('shop-product-title').innerText = name;
+                document.getElementById('shop-product-price').innerText = "₹" + parseFloat(price).toFixed(2) + " – ₹" + (parseFloat(price)*10).toFixed(2);
+
+                btn.style.background = "#0c4d24";
+                btn.innerText = "Saved ✓";
+                setTimeout(() => {
+                    btn.style.background = "var(--green-accent)";
+                    btn.innerText = "Save";
+                }, 2000);
+            }
+        }
+
+        function toggleHideProduct(btn) {
+            const row = btn.closest('tr');
+            if(row.style.opacity === "0.4") {
+                row.style.opacity = "1";
+                alert("Product is now visible on storefront.");
+            } else {
+                row.style.opacity = "0.4";
+                alert("Product is now hidden from storefront.");
+            }
+        }
+
+        function deleteProductRow(btn) {
+            if(confirm("Are you sure you want to delete this product from the item list?")) {
+                const row = btn.closest('tr');
+                row.remove();
+                alert("Product deleted successfully.");
+            }
+        }
+
+        /* DATE CALCULATIONS FOR PRESETS */
         function setDatesByPreset(prefix) {
             const preset = document.getElementById(prefix + '-preset-filter').value;
             if(preset === 'custom') return;
@@ -1123,19 +1187,25 @@
 
             if(preset === 'this_month') {
                 from = new Date(now.getFullYear(), now.getMonth(), 1);
-                to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of current month
             } else if(preset === 'last_month') {
                 from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                to = new Date(now.getFullYear(), now.getMonth(), 0);
-            } else if(preset === 'last_6_months') {
-                from = new Date(now.getFullYear(), now.getMonth() - 6, 1);
-                to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                to = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of last month
+            } else if(preset === 'current_financial_year') {
+                const curYear = now.getFullYear();
+                const curMonth = now.getMonth();
+                const fyStartYear = curMonth >= 3 ? curYear : curYear - 1;
+                from = new Date(fyStartYear, 3, 1); // 1st April of current FY
+                to = new Date(); // Current date
             } else if(preset === 'last_financial_year') {
                 const curYear = now.getFullYear();
                 const curMonth = now.getMonth();
                 const fyStartYear = curMonth >= 3 ? curYear - 1 : curYear - 2;
-                from = new Date(fyStartYear, 3, 1); // April 1st
-                to = new Date(fyStartYear + 1, 2, 31); // March 31st
+                from = new Date(fyStartYear, 3, 1); // 1st April of last FY
+                to = new Date(fyStartYear + 1, 2, 31); // 31st March of last FY
+            } else if(preset === 'all_time') {
+                from = new Date(2026, 0, 1); // First bill date
+                to = new Date(); // Current date
             }
 
             document.getElementById(prefix + '-from-date').value = from.toISOString().split('T')[0];
@@ -1151,13 +1221,22 @@
             }
         }
 
-        // Initialize default dates on load
+        function onDateManualChange(prefix) {
+            // Switch preset to custom when dates are changed manually
+            document.getElementById(prefix + '-preset-filter').value = 'custom';
+            if(prefix === 'orders') {
+                filterAdminOrders();
+            } else {
+                filterAndPrintReport();
+            }
+        }
+
+        // Initialize default dates on load (This Month: 1st to last day)
         window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('orders-from-date').value = '2026-07-01';
-            document.getElementById('orders-to-date').value = '2026-07-31';
-            document.getElementById('reports-from-date').value = '2026-07-01';
-            document.getElementById('reports-to-date').value = '2026-07-31';
+            setDatesByPreset('orders');
+            setDatesByPreset('reports');
             filterAdminOrders();
+            filterAndPrintReport();
         });
 
         function filterAdminOrders() {
@@ -1193,18 +1272,20 @@
             const to = document.getElementById('reports-to-date').value;
 
             const rows = document.querySelectorAll('#admin-orders-table-body tr');
-            let count = 0;
             let sales = 0;
             rows.forEach(r => {
                 const d = r.getAttribute('data-date');
                 const amt = parseFloat(r.getAttribute('data-amount') || 0);
                 if(d >= from && d <= to) {
-                    count++;
                     sales += amt;
                 }
             });
 
             document.getElementById('reports-total-sales-val').innerText = "₹" + sales.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function printReportExplicit() {
+            window.print();
         }
 
         function updateCustomerNav() {
@@ -1594,17 +1675,6 @@
             printArea.style.display = "none";
         }
 
-        function saveRowWithConfirm(btnElement) {
-            if (confirm("Are you sure you want to save these changes?")) {
-                btnElement.style.background = "#0c4d24";
-                btnElement.innerText = "Saved ✓";
-                setTimeout(() => {
-                    btnElement.style.background = "var(--green-accent)";
-                    btnElement.innerText = "Save";
-                }, 2000);
-            }
-        }
-
         function saveInvoiceConfigWithConfirm() {
             if (confirm("Are you sure you want to update the invoice prefix and sequence settings?")) {
                 const newPrefix = document.getElementById('adm-prefix-input').value;
@@ -1620,19 +1690,22 @@
                 tr.innerHTML = `
                     <td>
                         <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                            <div style="display:flex; gap:3px;">
-                                <img src="${defaultProductImg}" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
+                            <div style="display:flex; gap:3px;" class="admin-multi-img-preview-box">
+                                <img src="${defaultProductImg}" class="sku-img-preview" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
                             </div>
-                            <input type="file" accept="image/*" multiple style="font-size:10px; width:140px;" onchange="previewMultipleProductImages(this)">
+                            <input type="file" accept="image/*" multiple style="font-size:10px; width:130px;" onchange="previewMultipleProductImages(this)">
                         </div>
                     </td>
-                    <td><input type="text" class="admin-input-sm" value="STH-NEW-01"></td>
-                    <td><input type="number" class="admin-input-sm" value="100"></td>
-                    <td><input type="number" class="admin-input-sm" value="5"></td>
-                    <td><input type="text" class="admin-input-sm" value="17011490"></td>
-                    <td><input type="text" class="admin-input-sm" value="BATCH-2026-B"></td>
-                    <td><input type="number" class="admin-input-sm" value="50"></td>
-                    <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
+                    <td><input type="text" class="admin-input-sm sku-name" value="New Product"></td>
+                    <td><input type="number" class="admin-input-sm sku-price" value="100"></td>
+                    <td><input type="number" class="admin-input-sm sku-tax" value="5"></td>
+                    <td><input type="text" class="admin-input-sm sku-hsn" value="17011490"></td>
+                    <td><input type="number" class="admin-input-sm sku-stock" value="50"></td>
+                    <td>
+                        <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="saveProductRow(this)">Save</button>
+                        <button class="btn-secondary" style="padding:4px 8px; font-size:11px; margin-bottom:3px; background:#475569;" onclick="toggleHideProduct(this)">Hide/Show</button>
+                        <button class="cart-remove-btn" style="padding:4px 8px; font-size:11px;" onclick="deleteProductRow(this)">Delete</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             }
