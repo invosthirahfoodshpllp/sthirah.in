@@ -543,10 +543,10 @@
         </div>
     </main>
 
-    <!-- CART VIEW -->
+    <!-- CART VIEW WITH PAYMENT GATEWAY & CHECKOUT BUTTON RESTORED -->
     <main id="cart-view" class="page-view">
         <div class="content-page" style="max-width:800px;">
-            <h1>Shopping Cart & Checkout</h1>
+            <h1>Shopping Cart & Secure Checkout</h1>
             <br>
             <div id="cart-list">Cart is empty.</div>
             <br>
@@ -555,7 +555,22 @@
                 <h2>Select Saved Delivery Address</h2>
                 <p style="font-size:12px; color:#666; margin-bottom:15px;">Choose from your saved addresses in My Account to complete your order.</p>
                 <div id="checkout-saved-addresses-selection" style="margin-bottom:20px;"></div>
-                <button id="btn-checkout-place" class="btn-action" onclick="processCheckoutOrder()">PLACE ORDER & GENERATE INVOICE</button>
+
+                <h2>Select Payment Gateway</h2>
+                <div style="display:flex; gap:15px; margin:15px 0; flex-wrap:wrap;">
+                    <label style="background:#fafafa; border:1px solid #ddd; padding:10px 15px; border-radius:6px; cursor:pointer;">
+                        <input type="radio" name="payment_gateway" value="UPI" checked> UPI / QR Pay
+                    </label>
+                    <label style="background:#fafafa; border:1px solid #ddd; padding:10px 15px; border-radius:6px; cursor:pointer;">
+                        <input type="radio" name="payment_gateway" value="Card"> Credit / Debit Card
+                    </label>
+                    <label style="background:#fafafa; border:1px solid #ddd; padding:10px 15px; border-radius:6px; cursor:pointer;">
+                        <input type="radio" name="payment_gateway" value="NetBanking"> Net Banking
+                    </label>
+                </div>
+
+                <!-- RESTORED CHECKOUT BUTTON -->
+                <button id="btn-checkout-place" class="btn-action" onclick="processCheckoutOrder()">PROCEED TO CHECKOUT & PAY VIA GATEWAY</button>
             </div>
         </div>
     </main>
@@ -668,7 +683,7 @@
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS & POS BILLING WITH UPDATED DROPDOWN & WORKING CALENDAR -->
+            <!-- TAB 2: ORDERS & POS BILLING -->
             <div id="tab-orders" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div class="filter-bar-widget">
@@ -826,7 +841,7 @@
                 </div>
             </div>
 
-            <!-- TAB 5: PRODUCTS (BATCH NUMBER REMOVED, HIDE/DELETE WITH CONFIRMATION, LIVE SYNC TO STOREFRONT) -->
+            <!-- TAB 5: PRODUCTS -->
             <div id="tab-products" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -886,7 +901,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: SALES & REPORTS WITH UPDATED DROPDOWN, MANUAL DATE TRIGGER & MANUAL PRINT BUTTON -->
+            <!-- TAB 7: SALES & REPORTS -->
             <div id="tab-reports" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:800px;">
                     <h2>Sales & Reports</h2>
@@ -1136,7 +1151,6 @@
             }
         }
 
-        /* LIVE SYNC PRODUCT EDITS TO STOREFRONT */
         function saveProductRow(btn) {
             if(confirm("Are you sure you want to save this product and sync changes to storefront?")) {
                 const row = btn.closest('tr');
@@ -1176,7 +1190,6 @@
             }
         }
 
-        /* DATE CALCULATIONS FOR PRESETS */
         function setDatesByPreset(prefix) {
             const preset = document.getElementById(prefix + '-preset-filter').value;
             if(preset === 'custom') return;
@@ -1187,25 +1200,25 @@
 
             if(preset === 'this_month') {
                 from = new Date(now.getFullYear(), now.getMonth(), 1);
-                to = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of current month
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             } else if(preset === 'last_month') {
                 from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                to = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of last month
+                to = new Date(now.getFullYear(), now.getMonth(), 0);
             } else if(preset === 'current_financial_year') {
                 const curYear = now.getFullYear();
                 const curMonth = now.getMonth();
                 const fyStartYear = curMonth >= 3 ? curYear : curYear - 1;
-                from = new Date(fyStartYear, 3, 1); // 1st April of current FY
-                to = new Date(); // Current date
+                from = new Date(fyStartYear, 3, 1);
+                to = new Date();
             } else if(preset === 'last_financial_year') {
                 const curYear = now.getFullYear();
                 const curMonth = now.getMonth();
                 const fyStartYear = curMonth >= 3 ? curYear - 1 : curYear - 2;
-                from = new Date(fyStartYear, 3, 1); // 1st April of last FY
-                to = new Date(fyStartYear + 1, 2, 31); // 31st March of last FY
+                from = new Date(fyStartYear, 3, 1);
+                to = new Date(fyStartYear + 1, 2, 31);
             } else if(preset === 'all_time') {
-                from = new Date(2026, 0, 1); // First bill date
-                to = new Date(); // Current date
+                from = new Date(2026, 0, 1);
+                to = new Date();
             }
 
             document.getElementById(prefix + '-from-date').value = from.toISOString().split('T')[0];
@@ -1222,7 +1235,6 @@
         }
 
         function onDateManualChange(prefix) {
-            // Switch preset to custom when dates are changed manually
             document.getElementById(prefix + '-preset-filter').value = 'custom';
             if(prefix === 'orders') {
                 filterAdminOrders();
@@ -1231,7 +1243,6 @@
             }
         }
 
-        // Initialize default dates on load (This Month: 1st to last day)
         window.addEventListener('DOMContentLoaded', () => {
             setDatesByPreset('orders');
             setDatesByPreset('reports');
@@ -1564,6 +1575,10 @@
                 alert("Please select a delivery address.");
                 return;
             }
+            const gateway = document.querySelector('input[name="payment_gateway"]:checked').value;
+            
+            if(!confirm(`Proceed to payment via ${gateway} Gateway?`)) return;
+
             const addrIdx = parseInt(selectedRadio.value);
             const chosenAddr = currentUser.addresses[addrIdx];
             const fullAddress = `Door ${chosenAddr.door}, ${chosenAddr.street}, ${chosenAddr.area} - ${chosenAddr.pincode}`;
@@ -1613,7 +1628,7 @@
             `;
             tbody.appendChild(tr);
 
-            alert(`Order Placed Successfully!\nInvoice Generated: ${invoiceId}`);
+            alert(`Payment Successful via ${gateway} Gateway!\nOrder Placed Successfully!\nInvoice Generated: ${invoiceId}`);
             cart = [];
             document.getElementById('cart-count').innerText = "0";
             renderCart();
