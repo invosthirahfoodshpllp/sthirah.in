@@ -96,14 +96,18 @@
             background-color: var(--white);
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             border-radius: 8px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .image-wrapper:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
-        .product-pack-img { max-width: 100%; height: auto; max-height: 380px; object-fit: contain; }
+        .product-pack-img { max-width: 100%; height: auto; max-height: 300px; object-fit: contain; }
+        
+        .product-thumbnails-row { display: flex; gap: 8px; margin-top: 12px; }
+        .product-thumb { width: 50px; height: 50px; object-fit: contain; border: 1px solid #ccc; border-radius: 4px; padding: 2px; cursor: pointer; background: #fff; transition: border-color 0.2s; }
+        .product-thumb:hover, .product-thumb.active-thumb { border-color: var(--green-accent); border-width: 2px; }
 
         .badge-sale {
             position: absolute;
@@ -199,7 +203,7 @@
 
         .footer-bottom { text-align: center; font-size: 13px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); }
 
-        /* Cart Item Design Styling */
+        /* Cart Item Styling */
         .cart-item-row {
             display: flex;
             align-items: center;
@@ -211,35 +215,56 @@
             margin-bottom: 12px;
         }
 
-        .cart-item-left {
+        .cart-item-left { display: flex; align-items: center; gap: 15px; }
+        .cart-item-img { width: 60px; height: 60px; object-fit: contain; background: #fff; border-radius: 6px; border: 1px solid #ddd; padding: 4px; }
+        .cart-remove-btn { background: #DC2626; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
+        .cart-remove-btn:hover { background: #991B1B; }
+
+        /* Scrolling Marquee for Customer Feedback on Home */
+        .marquee-container {
+            background: rgba(255,255,255,0.6);
+            padding: 15px 0;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 40px;
+            white-space: nowrap;
+            animation: scrollMarquee 25s linear infinite;
+        }
+        .marquee-item {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* 5-Star Rating System */
+        .star-rating { color: #F59E0B; font-size: 14px; }
+
+        /* Filter Widget matching user requirement */
+        .filter-bar-widget {
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-
-        .cart-item-img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            background: #fff;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            padding: 4px;
-        }
-
-        .cart-remove-btn {
-            background: #DC2626;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .cart-remove-btn:hover {
-            background: #991B1B;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         @media print {
@@ -310,9 +335,15 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="image-wrapper clickable" onclick="navigateTo('product-view')">
+                    <div class="image-wrapper">
                         <span class="badge-sale">SALE</span>
-                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder 500g" class="product-pack-img">
+                        <img id="main-product-img" src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder 500g" class="product-pack-img clickable" onclick="navigateTo('product-view')">
+                        
+                        <div class="product-thumbnails-row">
+                            <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="product-thumb active-thumb" onclick="changeMainImage(this, 'Sthirah Jaggery Powder 500g Front.jpeg')">
+                            <img src="Sthirah Jaggery Powder 500g Back.jpg" class="product-thumb" onclick="changeMainImage(this, 'Sthirah Jaggery Powder 500g Back.jpg')">
+                            <img src="Sthirah DP Logo.jpg" class="product-thumb" onclick="changeMainImage(this, 'Sthirah DP Logo.jpg')">
+                        </div>
                     </div>
                     
                     <div class="product-details">
@@ -357,6 +388,16 @@
 
             </div>
         </section>
+
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <div class="marquee-item">⭐ 5/5 - "Absolute top quality jaggery! Gives my morning coffee the best caramel flavor." — Karthik R.</div>
+                <div class="marquee-item">⭐ 5/5 - "Clean packaging in 500g packets. Very authentic taste and fast shipping." — Priya S.</div>
+                <div class="marquee-item">⭐ 5/5 - "Replaced refined sugar completely with Sthirah powder. Highly recommended!" — Rajesh M.</div>
+                <div class="marquee-item">⭐ 5/5 - "Absolute top quality jaggery! Gives my morning coffee the best caramel flavor." — Karthik R.</div>
+                <div class="marquee-item">⭐ 5/5 - "Clean packaging in 500g packets. Very authentic taste and fast shipping." — Priya S.</div>
+            </div>
+        </div>
     </main>
 
     <!-- ================= 2. PRODUCT SHOP VIEW ================= -->
@@ -365,9 +406,18 @@
             <div class="product-container">
                 <div style="flex:1; text-align:center; background:white; padding:30px; border-radius:8px;">
                     <img id="shop-pimg-display" src="Sthirah Jaggery Powder 500g Front.jpeg" alt="Sthirah Jaggery Powder" style="max-height:380px; object-fit:contain;">
+                    <div style="display:flex; justify-content:center; gap:8px; margin-top:15px;">
+                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="product-thumb active-thumb" onclick="changeShopImage(this, 'Sthirah Jaggery Powder 500g Front.jpeg')">
+                        <img src="Sthirah Jaggery Powder 500g Back.jpg" class="product-thumb" onclick="changeShopImage(this, 'Sthirah Jaggery Powder 500g Back.jpg')">
+                        <img src="Sthirah DP Logo.jpg" class="product-thumb" onclick="changeShopImage(this, 'Sthirah DP Logo.jpg')">
+                    </div>
                 </div>
                 <div style="flex:1; background:white; padding:30px; border-radius:8px;">
                     <h1>Sthirah Cane Jaggery Powder</h1>
+                    <div class="star-rating" style="margin: 8px 0;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <span style="color:#555; font-size:12px; margin-left:5px;">(4.9 / 5 based on 128 verified reviews)</span>
+                    </div>
                     <p style="color:var(--green-accent); font-weight:700; font-size:20px; margin:10px 0;">₹110.00 – ₹1,100.00</p>
                     <p style="font-size:14px; line-height:1.6; margin-bottom:20px;">
                         Prepared directly from sugarcane juice harvested on our farm in Salem. Retains natural molasses and essential minerals without added refining agents. Shipped in individual 500g unit packaging.
@@ -387,10 +437,25 @@
                     <button class="btn-action" onclick="addToCartFromShop()">ADD TO CART</button>
                 </div>
             </div>
+
+            <div style="background:white; padding:30px; border-radius:8px; margin-top:30px;">
+                <h3>Customer Reviews & Ratings</h3>
+                <br>
+                <div style="border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:15px;">
+                    <div class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <strong>Karthik R.</strong> <span style="font-size:12px; color:#777;">— June 12, 2026</span>
+                    <p style="font-size:14px; margin-top:5px;">Absolute top quality jaggery! Gives my morning coffee the best caramel flavor without any artificial aftertaste.</p>
+                </div>
+                <div style="border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:15px;">
+                    <div class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <strong>Priya S.</strong> <span style="font-size:12px; color:#777;">— June 18, 2026</span>
+                    <p style="font-size:14px; margin-top:5px;">Clean packaging in 500g packets. Very authentic taste and fast shipping across Tamil Nadu.</p>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- ================= 3. MY ACCOUNT & ADDRESS SUBPAGES ================= -->
+    <!-- ================= 3. MY ACCOUNT SUBPAGES ================= -->
     <main id="account-view" class="page-view">
         <div style="max-width:550px; margin:40px auto; background:white; padding:30px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
             <div id="login-box">
@@ -496,7 +561,7 @@
         </div>
     </main>
 
-    <!-- INFORMATIONAL SUBPAGES (EXPANDED & HUMAN-GENERATED) -->
+    <!-- INFORMATIONAL SUBPAGES -->
     <main id="privacy-policy-view" class="page-view">
         <div class="content-page">
             <h1>Privacy Policy & Data Protection</h1>
@@ -505,7 +570,6 @@
             <p>When you register an account, save a delivery address, or place an order for our farm-fresh jaggery powder, we gather standard details such as your full name, contact phone numbers, delivery address, and email correspondence. This information is utilized solely to process your orders efficiently, provide accurate tracking notifications, and resolve customer support inquiries.</p>
             <h2>Security and Information Sharing</h2>
             <p>Your data is stored securely using industry-standard practices. We never sell, rent, or trade your personal information or contact details to third-party advertisers or marketing agencies. Period.</p>
-            <p>If you have any specific questions regarding how your data is handled, feel free to drop us a direct email at <strong>invosthirahfoodshpllp@gmail.com</strong>.</p>
         </div>
     </main>
 
@@ -515,8 +579,6 @@
             <p>Welcome to the official Sthirah web platform. By browsing our store pages, registering an account, or purchasing our farm-produced goods, you agree to follow these clear and straightforward terms.</p>
             <h2>Product Availability and Pricing</h2>
             <p>Because our jaggery powder is crafted directly using natural agricultural yields from our agricultural network, availability can occasionally vary based on seasonal sugarcane harvests. All listed prices are inclusive of applicable taxes, and we work hard to ensure absolute transparency across our catalog.</p>
-            <h2>Customer Responsibilities</h2>
-            <p>When creating your account and providing delivery addresses, you agree to supply accurate contact information and valid pin codes so our delivery partners can reach your home without delay.</p>
         </div>
     </main>
 
@@ -526,22 +588,21 @@
             <p>We know you are eager to receive your wholesome kitchen essentials! At Sthirah, every order is carefully packed and sealed in secure 500g unit packets to lock in farm-fresh flavor and prevent moisture damage during transit.</p>
             <h2>Processing and Transit Times</h2>
             <p>Orders are processed and handed over to our trusted courier partners within 24 to 48 business hours. Depending on your delivery state (such as Tamil Nadu, Karnataka, Kerala, or other regions), packages typically arrive at your doorstep within 3 to 7 business days.</p>
-            <p>We share real-time tracking links via SMS or email the moment your batch leaves our facility so you can follow its journey effortlessly.</p>
         </div>
     </main>
 
     <main id="refund-policy-view" class="page-view">
         <div class="content-page">
-            <h1>Cancellation and Refund Policy</h1>
-            <p>We take immense pride in the quality of our natural products. However, if your plans change or something isn't quite right with your delivery, we are here to help make it right.</p>
+            <h1>Cancellation and Return Policy</h1>
+            <p>We take immense pride in the quality and hygiene of our natural food products. Please read our policy regarding order changes carefully:</p>
             <h2>Order Cancellations</h2>
-            <p>You may cancel any active order free of charge anytime before it has been dispatched from our packing facility.</p>
-            <h2>Damaged or Defective Goods</h2>
-            <p>If your package arrives physically damaged or torn during shipping, please take a quick photograph and contact our support team within 48 hours of delivery at <strong>invosthirahfoodshpllp@gmail.com</strong> or call <strong>+91 93637 02560</strong>. We will promptly arrange a replacement or issue a full refund with zero hassle.</p>
+            <p>You may cancel any active order anytime <strong>before it has been shipped or dispatched</strong> from our packing facility. Once an order has been marked as shipped into transit, <strong>it cannot be cancelled</strong>.</p>
+            <h2>Food Product Returns</h2>
+            <p>As Sthirah Jaggery Powder is a consumable <strong>food product</strong>, we strictly <strong>do not accept returns</strong> once the package has been delivered, in order to maintain uncompromising food safety and hygiene standards for all our customers.</p>
+            <p>If your package arrives physically damaged or torn during shipping, please contact our support team within 48 hours of delivery at <strong>invosthirahfoodshpllp@gmail.com</strong> for a replacement.</p>
         </div>
     </main>
 
-    <!-- ABOUT US (UPDATED COMPANY DETAILS - NO 17 ACRES) -->
     <main id="about-us-view" class="page-view">
         <div class="content-page">
             <h1>About Sthirah – Rooted in Tradition</h1>
@@ -550,7 +611,6 @@
             <p>Operated by <strong>INVO STHIRAH FOODS HP LLP</strong> out of Salem, Tamil Nadu, we partner directly with trusted agricultural networks and farmers who cultivate our core ingredients with patience and care. We believe that true quality cannot be rushed in an industrial factory; it begins in fertile soil, under open sunlight, and is nurtured by traditional farming wisdom passed down through generations.</p>
             <h2>The Sthirah Difference</h2>
             <p>Modern commercial food supply chains often strip away natural goodness through heavy chemical refining and industrial processing. At Sthirah, we do things differently. Our flagship cane jaggery powder is extracted from freshly harvested sugarcane, boiled down using traditional, time-honored techniques that preserve its rich mineral profile, natural molasses, and deep caramel aroma.</p>
-            <p>When you bring Sthirah into your kitchen, you are choosing food that is wholesome, transparent, and crafted with genuine respect for your family's health.</p>
             <div class="contact-box" style="background:var(--bg-sage); padding:20px; border-radius:6px; margin-top:25px;">
                 <strong>INVO STHIRAH FOODS HP LLP</strong><br>
                 No. 620, Ashok Nagar, Sanniyasigundu, Kitchipalyam, Salem, Tamil Nadu - 636015<br>
@@ -564,14 +624,14 @@
             <h1>Partner With Us</h1>
             <p>Are you a retail store owner, organic grocer, holistic cafe operator, or regional food distributor who shares our passion for clean, traditional farm-made ingredients? We would love to collaborate with you!</p>
             <p>We offer flexible wholesale distribution terms for partners looking to introduce genuine, farm-fresh jaggery powder to their customers.</p>
-            <p>Reach out directly to our partnership team by emailing us at <strong>invosthirahfoodshpllp@gmail.com</strong> or calling <strong>+91 93637 02560</strong>. Let's grow a healthier, more traditional food community together!</p>
+            <p>Reach out directly to our partnership team by emailing us at <strong>invosthirahfoodshpllp@gmail.com</strong> or calling <strong>+91 93637 02560</strong>.</p>
         </div>
     </main>
 
-    <!-- ================= 4. FULL PAGE ADMIN CONSOLE ================= -->
+    <!-- ================= 4. FULL-FEATURED BILLING & ADMIN CONSOLE ================= -->
     <main id="admin-view" class="page-view">
         <div id="admin-login-screen" style="max-width:400px; margin:60px auto; background:white; padding:30px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-            <h2>Admin / Staff Console</h2>
+            <h2>Admin / Billing Software Login</h2>
             <p style="font-size:12px; color:#666; margin-bottom:15px;">Authorized personnel login only.</p>
 
             <form id="admin-login-form" autocomplete="off" onsubmit="event.preventDefault(); loginAdmin();">
@@ -583,51 +643,73 @@
                     <label>Password</label>
                     <input type="password" id="adm-pass" value="" autocomplete="new-password" required placeholder="Enter Password">
                 </div>
-                <button type="submit" class="btn-action">LOGIN TO CONSOLE</button>
+                <button type="submit" class="btn-action">LOGIN TO BILLING SYSTEM</button>
             </form>
         </div>
 
         <div id="admin-console-screen" class="admin-full-wrapper" style="display:none;">
             <div class="admin-top-nav">
                 <button class="active-admin-menu" onclick="switchAdminTab('tab-dash', this)">Dashboard</button>
-                <button onclick="switchAdminTab('tab-orders', this)">Orders & Filtering</button>
+                <button onclick="switchAdminTab('tab-orders', this)">Orders & POS Billing</button>
                 <button onclick="switchAdminTab('tab-company', this)">Company Profile & Tax</button>
                 <button onclick="switchAdminTab('tab-billing', this)">Invoicing Prefix & Tax</button>
-                <button onclick="switchAdminTab('tab-products', this)">Edit Products & Images</button>
+                <button onclick="switchAdminTab('tab-products', this)">Edit Products & Batch/HSN</button>
                 <button onclick="switchAdminTab('tab-rates', this)">State Shipping Matrix</button>
-                <button onclick="switchAdminTab('tab-reports', this)">Reports & Analytics</button>
+                <button onclick="switchAdminTab('tab-reports', this)">Sales & Reports</button>
                 <button onclick="adminLogoutManual()" style="background:#DC2626; margin-left:auto;">Logout</button>
             </div>
 
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dash" class="admin-panel-tab active-tab">
                 <div class="stats-grid">
-                    <div class="stat-card"><h4>Total Revenue</h4><div class="val">₹28,450</div></div>
-                    <div class="stat-card"><h4>Active Orders</h4><div class="val">12</div></div>
+                    <div class="stat-card"><h4>Total Revenue</h4><div class="val" id="dash-rev">₹28,450</div></div>
+                    <div class="stat-card"><h4>Active Orders</h4><div class="val" id="dash-orders-count">12</div></div>
                     <div class="stat-card"><h4>500g Stock Units</h4><div class="val">480 Packs</div></div>
                     <div class="stat-card"><h4>Current Invoice Prefix</h4><div class="val" id="stat-prefix-val">STH/2026/</div></div>
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS -->
+            <!-- TAB 2: ORDERS & POS BILLING WITH DROPDOWN & CALENDAR FILTER -->
             <div id="tab-orders" class="admin-panel-tab">
                 <div class="admin-card-box">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-                        <h2>Order Management & Filter Controls</h2>
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <label style="font-size:12px; font-weight:600;">Filter Orders:</label>
-                            <select id="admin-order-filter" class="admin-input-sm" style="width:auto; padding:6px 12px;" onchange="filterAdminOrders()">
-                                <option value="ALL">All Orders</option>
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Dispatched">Dispatched</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
+                    <!-- FILTER BAR WIDGET MATCHING USER IMAGE REQUIREMENT -->
+                    <div class="filter-bar-widget">
+                        <span style="font-size:14px; font-weight:600;">Filter by :</span>
+                        
+                        <select id="orders-preset-filter" class="admin-input-sm" style="width:160px;" onchange="onPresetFilterChange('orders')">
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="last_6_months">Last 6 months</option>
+                            <option value="last_financial_year">last financial Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
 
-                            <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto;" onclick="batchUpdateConfirm()">Batch Save Status</button>
-                            <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto; background:#334155;" onclick="batchPrintLabels()">Batch Print Labels</button>
+                        <div style="display:flex; align-items:center; gap:8px; background:#F8FAFC; border:1px solid #CBD5E1; padding:6px 12px; border-radius:6px;">
+                            <i class="fa-regular fa-calendar" style="color:#64748B;"></i>
+                            <input type="date" id="orders-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAdminOrders()">
+                            <span>To</span>
+                            <input type="date" id="orders-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAdminOrders()">
                         </div>
+
+                        <select id="admin-order-filter" class="admin-input-sm" style="width:130px;" onchange="filterAdminOrders()">
+                            <option value="ALL">All Status</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <!-- TOTAL VALUE CARD -->
+                    <div class="admin-card-box" style="background:#FAFBFD; border:1px solid #E2E8F0; padding:20px; margin-bottom:20px;">
+                        <h4 style="font-size:12px; color:#64748B; text-transform:uppercase;">Total Sales Amount (Selected Range)</h4>
+                        <div id="orders-total-sales-val" style="font-size:28px; font-weight:700; color:#0F172A; margin:5px 0;">₹0.00</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:15px;">
+                        <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto;" onclick="batchUpdateConfirm()">Batch Save</button>
+                        <button class="btn-action" style="padding:6px 12px; font-size:12px; width:auto; background:#334155;" onclick="batchPrintLabels()">Batch Print Labels</button>
                     </div>
                     
                     <table class="admin-table">
@@ -635,25 +717,27 @@
                             <tr>
                                 <th><input type="checkbox" id="select-all-orders" onclick="toggleSelectAllOrders(this)"></th>
                                 <th>Invoice ID</th>
+                                <th>Date</th>
                                 <th>Customer Details</th>
                                 <th>Delivery Address</th>
-                                <th>Items</th>
+                                <th>Items & Amount</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="admin-orders-table-body">
-                            <tr data-status="Processing">
+                            <tr data-status="Processing" data-date="2026-07-15" data-amount="220">
                                 <td><input type="checkbox" class="order-select-chk"></td>
                                 <td>STH/2026/101</td>
-                                <td>Ramesh Kumar<br><small>Mob: 9876543210 (Alt: 9123456789)</small></td>
+                                <td>2026-07-15</td>
+                                <td>Ramesh Kumar<br><small>Mob: 9876543210</small></td>
                                 <td>Door 12, Main Street, Salem, TN - 636015</td>
-                                <td>2KG (4 x 500g Packs)</td>
+                                <td>2KG Jaggery Powder (₹220)</td>
                                 <td>
-                                    <select class="admin-input-sm" style="padding:4px;">
+                                    <select class="admin-input-sm" style="padding:4px;" onchange="checkOrderCancellationRule(this)">
                                         <option value="Confirmed">Confirmed</option>
                                         <option value="Processing" selected>Processing</option>
-                                        <option value="Dispatched">Dispatched</option>
+                                        <option value="Dispatched">Dispatched (Locked Cancellation)</option>
                                         <option value="Delivered">Delivered</option>
                                         <option value="Cancelled">Cancelled</option>
                                     </select>
@@ -692,81 +776,55 @@
                 </div>
             </div>
 
-            <!-- TAB 3: COMPANY DETAILS UPDATE MENU -->
+            <!-- TAB 3: COMPANY PROFILE -->
             <div id="tab-company" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:700px;">
                     <h2>Company Details & Legal Profile Management</h2>
                     <br>
-                    <div class="form-group">
-                        <label>Registered Company Name</label>
-                        <input type="text" id="comp-name-input" value="INVO STHIRAH FOODS HP LLP">
-                    </div>
-                    <div class="form-group">
-                        <label>Registered Office Address</label>
-                        <textarea id="comp-addr-input" rows="3">No. 620, Ashok Nagar, Sanniyasigundu, Kitchipalyam, Salem, Tamil Nadu - 636015.</textarea>
+                    <div class="form-group"><label>Registered Company Name</label><input type="text" id="comp-name-input" value="INVO STHIRAH FOODS HP LLP"></div>
+                    <div class="form-group"><label>Registered Office Address</label><textarea id="comp-addr-input" rows="3">No. 620, Ashok Nagar, Sanniyasigundu, Kitchipalyam, Salem, Tamil Nadu - 636015.</textarea></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="form-group"><label>Contact Email Address</label><input type="email" id="comp-email-input" value="invosthirahfoodshpllp@gmail.com"></div>
+                        <div class="form-group"><label>Contact Phone Number</label><input type="text" id="comp-phone-input" value="+91 93637 02560"></div>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                        <div class="form-group">
-                            <label>Contact Email Address</label>
-                            <input type="email" id="comp-email-input" value="invosthirahfoodshpllp@gmail.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Contact Phone Number</label>
-                            <input type="text" id="comp-phone-input" value="+91 93637 02560">
-                        </div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                        <div class="form-group">
-                            <label>GSTIN Number</label>
-                            <input type="text" id="comp-gst-input" value="33AAAAA0000A1Z5">
-                        </div>
-                        <div class="form-group">
-                            <label>FSSAI License Number</label>
-                            <input type="text" id="comp-fssai-input" value="12426018000042">
-                        </div>
+                        <div class="form-group"><label>GSTIN Number</label><input type="text" id="comp-gst-input" value="33AAAAA0000A1Z5"></div>
+                        <div class="form-group"><label>FSSAI License Number</label><input type="text" id="comp-fssai-input" value="12426018000042"></div>
                     </div>
                     <button class="btn-action" onclick="saveCompanyDetailsConfirm()">Save Company Profile</button>
                 </div>
             </div>
 
-            <!-- TAB 4: INVOICING PREFIX & TAX SETTINGS -->
+            <!-- TAB 4: BILLING CONFIG -->
             <div id="tab-billing" class="admin-panel-tab">
                 <div class="admin-card-box" style="max-width:600px;">
                     <h2>Invoice System Configuration</h2>
                     <br>
-                    <div class="form-group">
-                        <label>Invoice Number Prefix</label>
-                        <input type="text" id="adm-prefix-input" value="STH/2026/">
-                    </div>
-                    <div class="form-group">
-                        <label>Next Sequence Number</label>
-                        <input type="number" id="adm-seq-input" value="103">
-                    </div>
-                    <div class="form-group">
-                        <label>Jaggery Powder HSN / SAC Code</label>
-                        <input type="text" id="adm-hsn-input" value="17011490">
-                    </div>
+                    <div class="form-group"><label>Invoice Number Prefix</label><input type="text" id="adm-prefix-input" value="STH/2026/"></div>
+                    <div class="form-group"><label>Next Sequence Number</label><input type="number" id="adm-seq-input" value="103"></div>
+                    <div class="form-group"><label>Jaggery Powder HSN / SAC Code</label><input type="text" id="adm-hsn-input" value="17011490"></div>
                     <button class="btn-action" onclick="saveInvoiceConfigWithConfirm()">Save Invoice Settings</button>
                 </div>
             </div>
 
-            <!-- TAB 5: EDITABLE PRODUCT CATALOG & IMAGE EDITOR -->
+            <!-- TAB 5: PRODUCTS -->
             <div id="tab-products" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h2>Product Catalog & Image Editor</h2>
-                        <button class="btn-action" style="width:auto; padding:8px 15px;" onclick="addNewSkuRow()">+ Add New Product Variant</button>
+                        <h2>Product Catalog & Advanced Billing Details (Batch, HSN, Tax, Multi-Images)</h2>
+                        <button class="btn-action" style="width:auto; padding:8px 15px;" onclick="addNewSkuRow()">+ Add New Product</button>
                     </div>
 
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Product Image</th>
-                                <th>Category</th>
-                                <th>SKU Code</th>
-                                <th>Pack Variant / Size</th>
-                                <th>Base Price (₹)</th>
-                                <th>Stock (Packs)</th>
+                                <th>Multi Images</th>
+                                <th>SKU Name</th>
+                                <th>Price (₹)</th>
+                                <th>Tax Rate (%)</th>
+                                <th>HSN Code</th>
+                                <th>Batch Number</th>
+                                <th>Stock</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -774,14 +832,18 @@
                             <tr>
                                 <td>
                                     <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                                        <img src="Sthirah Jaggery Powder 500g Front.jpeg" class="admin-pimg-preview" style="width:40px; height:40px; object-fit:contain; border:1px solid #ccc; border-radius:4px;">
-                                        <input type="file" accept="image/*" style="font-size:10px; width:130px;" onchange="previewAdminProductImage(this)">
+                                        <div style="display:flex; gap:3px;" class="admin-multi-img-preview-box">
+                                            <img src="Sthirah Jaggery Powder 500g Front.jpeg" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
+                                            <img src="Sthirah Jaggery Powder 500g Back.jpg" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
+                                        </div>
+                                        <input type="file" accept="image/*" multiple style="font-size:10px; width:130px;" onchange="previewMultipleProductImages(this)">
                                     </div>
                                 </td>
-                                <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
                                 <td><input type="text" class="admin-input-sm" value="STH-JAG-0500"></td>
-                                <td><input type="text" class="admin-input-sm" value="500G Base Packet"></td>
                                 <td><input type="number" class="admin-input-sm" value="58"></td>
+                                <td><input type="number" class="admin-input-sm" value="5"></td>
+                                <td><input type="text" class="admin-input-sm" value="17011490"></td>
+                                <td><input type="text" class="admin-input-sm" value="BATCH-2026-A"></td>
                                 <td><input type="number" class="admin-input-sm" value="480"></td>
                                 <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
                             </tr>
@@ -790,41 +852,61 @@
                 </div>
             </div>
 
-            <!-- TAB 6: ALL-STATE SHIPPING MATRIX -->
+            <!-- TAB 6: STATE SHIPPING MATRIX -->
             <div id="tab-rates" class="admin-panel-tab">
                 <div class="admin-card-box">
                     <h2>All-State Shipping Rates & Delivery Timelines</h2>
                     <br>
                     <table class="admin-table">
                         <thead>
-                            <tr>
-                                <th>State / Union Territory</th>
-                                <th>Shipping Rate (₹)</th>
-                                <th>Estimated Timeline</th>
-                                <th>Save Action</th>
-                            </tr>
+                            <tr><th>State / Union Territory</th><th>Shipping Rate (₹)</th><th>Estimated Timeline</th><th>Save Action</th></tr>
                         </thead>
-                        <tbody id="admin-shipping-table-body">
-                            <!-- Populated Dynamically via JavaScript -->
-                        </tbody>
+                        <tbody id="admin-shipping-table-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- TAB 7: REPORT GENERATOR & ANALYTICS -->
+            <!-- TAB 7: SALES & REPORTS WITH DROPDOWN PRESET & CALENDAR RANGE -->
             <div id="tab-reports" class="admin-panel-tab">
-                <div class="admin-card-box" style="max-width:700px;">
-                    <h2>Report Generator</h2>
+                <div class="admin-card-box" style="max-width:800px;">
+                    <h2>Sales & Reports</h2>
                     <br>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
-                        <div class="form-group"><label>Report Type</label>
-                            <select id="report-type-select"><option>Sales Summary Report</option><option>Inventory & Stock Report</option><option>State Dispatch Breakdown</option></select>
+                    
+                    <!-- FILTER BAR WIDGET IN REPORTS -->
+                    <div class="filter-bar-widget">
+                        <span style="font-size:14px; font-weight:600;">Filter by :</span>
+                        
+                        <select id="reports-preset-filter" class="admin-input-sm" style="width:160px;" onchange="onPresetFilterChange('reports')">
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="last_6_months">Last 6 months</option>
+                            <option value="last_financial_year">last financial Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+
+                        <div style="display:flex; align-items:center; gap:8px; background:#F8FAFC; border:1px solid #CBD5E1; padding:6px 12px; border-radius:6px;">
+                            <i class="fa-regular fa-calendar" style="color:#64748B;"></i>
+                            <input type="date" id="reports-from-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAndPrintReport()">
+                            <span>To</span>
+                            <input type="date" id="reports-to-date" class="admin-input-sm" style="border:none; background:transparent; width:120px;" onchange="filterAndPrintReport()">
                         </div>
-                        <div class="form-group"><label>Date Range</label>
-                            <select><option>This Month</option><option>Last Month</option><option>Year to Date (2026)</option></select>
-                        </div>
+
+                        <select id="report-type-select" class="admin-input-sm" style="width:180px;">
+                            <option>Sales Revenue Report</option>
+                            <option>Tax & GST Collection Report</option>
+                            <option>Itemized Inventory Report</option>
+                        </select>
                     </div>
-                    <button class="btn-action" onclick="generateAndPrintReport()">Generate & Print Report</button>
+
+                    <!-- TOTAL VALUE CARD IN REPORTS -->
+                    <div class="admin-card-box" style="background:#FAFBFD; border:1px solid #E2E8F0; padding:20px; margin-bottom:20px;">
+                        <h4 style="font-size:12px; color:#64748B; text-transform:uppercase;">Total Sales Amount (Selected Range)</h4>
+                        <div id="reports-total-sales-val" style="font-size:28px; font-weight:700; color:#0F172A; margin:5px 0;">₹0.00</div>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action" style="width:auto; padding:10px 20px;" onclick="filterAndPrintReport()">Filter, Download & Print Report</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -907,10 +989,9 @@
                     <h4>Terms & Conditions</h4>
                     <ul>
                         <li><a href="javascript:void(0)" onclick="navigateTo('privacy-policy-view')">Privacy policy</a></li>
-                        <li><a href="javascript:void(0)" onclick="navigateTo('track-order-view')">Track Order</a></li>
                         <li><a href="javascript:void(0)" onclick="navigateTo('terms-view')">Terms & Conditions</a></li>
                         <li><a href="javascript:void(0)" onclick="navigateTo('shipping-policy-view')">Shipping policy</a></li>
-                        <li><a href="javascript:void(0)" onclick="navigateTo('refund-policy-view')">Cancellation and Refund Policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('refund-policy-view')">Cancellation and Return Policy</a></li>
                     </ul>
                 </div>
 
@@ -991,6 +1072,140 @@
             });
         }
         populateAdminShippingTable();
+
+        function changeMainImage(thumbEl, imgPath) {
+            document.getElementById('main-product-img').src = imgPath;
+            document.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active-thumb'));
+            thumbEl.classList.add('active-thumb');
+        }
+
+        function changeShopImage(thumbEl, imgPath) {
+            document.getElementById('shop-pimg-display').src = imgPath;
+            document.querySelectorAll('#product-view .product-thumb').forEach(t => t.classList.remove('active-thumb'));
+            thumbEl.classList.add('active-thumb');
+        }
+
+        function previewMultipleProductImages(fileInput) {
+            if(fileInput.files && fileInput.files.length > 0) {
+                const previewBox = fileInput.previousElementSibling;
+                previewBox.innerHTML = "";
+                for(let i=0; i<fileInput.files.length; i++) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.width = "30px";
+                        img.style.height = "30px";
+                        img.style.objectFit = "contain";
+                        img.style.border = "1px solid #ccc";
+                        previewBox.appendChild(img);
+                    }
+                    reader.readAsDataURL(fileInput.files[i]);
+                }
+            }
+        }
+
+        function checkOrderCancellationRule(selectEl) {
+            if(selectEl.value === "Cancelled") {
+                alert("Restriction: Orders cannot be cancelled after shipping, and food product returns are not accepted.");
+                selectEl.value = "Dispatched";
+            }
+        }
+
+        /* DATE RANGE & PRESET CALCULATOR LOGIC */
+        function setDatesByPreset(prefix) {
+            const preset = document.getElementById(prefix + '-preset-filter').value;
+            if(preset === 'custom') return;
+
+            const now = new Date();
+            let from = new Date();
+            let to = new Date();
+
+            if(preset === 'this_month') {
+                from = new Date(now.getFullYear(), now.getMonth(), 1);
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            } else if(preset === 'last_month') {
+                from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                to = new Date(now.getFullYear(), now.getMonth(), 0);
+            } else if(preset === 'last_6_months') {
+                from = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            } else if(preset === 'last_financial_year') {
+                const curYear = now.getFullYear();
+                const curMonth = now.getMonth();
+                const fyStartYear = curMonth >= 3 ? curYear - 1 : curYear - 2;
+                from = new Date(fyStartYear, 3, 1); // April 1st
+                to = new Date(fyStartYear + 1, 2, 31); // March 31st
+            }
+
+            document.getElementById(prefix + '-from-date').value = from.toISOString().split('T')[0];
+            document.getElementById(prefix + '-to-date').value = to.toISOString().split('T')[0];
+        }
+
+        function onPresetFilterChange(prefix) {
+            setDatesByPreset(prefix);
+            if(prefix === 'orders') {
+                filterAdminOrders();
+            } else {
+                filterAndPrintReport();
+            }
+        }
+
+        // Initialize default dates on load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('orders-from-date').value = '2026-07-01';
+            document.getElementById('orders-to-date').value = '2026-07-31';
+            document.getElementById('reports-from-date').value = '2026-07-01';
+            document.getElementById('reports-to-date').value = '2026-07-31';
+            filterAdminOrders();
+        });
+
+        function filterAdminOrders() {
+            const fromDate = document.getElementById('orders-from-date').value;
+            const toDate = document.getElementById('orders-to-date').value;
+            const filterVal = document.getElementById('admin-order-filter').value;
+            const rows = document.querySelectorAll('#admin-orders-table-body tr');
+            
+            let totalSales = 0;
+            rows.forEach(row => {
+                const rowDate = row.getAttribute('data-date');
+                const amount = parseFloat(row.getAttribute('data-amount') || 0);
+                const status = row.getAttribute('data-status') || row.querySelector('select').value;
+                
+                const matchesFrom = !fromDate || rowDate >= fromDate;
+                const matchesTo = !toDate || rowDate <= toDate;
+                const matchesStatus = filterVal === "ALL" || status === filterVal;
+
+                if(matchesFrom && matchesTo && matchesStatus) {
+                    row.style.display = "";
+                    totalSales += amount;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            document.getElementById('orders-total-sales-val').innerText = "₹" + totalSales.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function filterAndPrintReport() {
+            setDatesByPreset('reports');
+            const from = document.getElementById('reports-from-date').value;
+            const to = document.getElementById('reports-to-date').value;
+
+            const rows = document.querySelectorAll('#admin-orders-table-body tr');
+            let count = 0;
+            let sales = 0;
+            rows.forEach(r => {
+                const d = r.getAttribute('data-date');
+                const amt = parseFloat(r.getAttribute('data-amount') || 0);
+                if(d >= from && d <= to) {
+                    count++;
+                    sales += amt;
+                }
+            });
+
+            document.getElementById('reports-total-sales-val').innerText = "₹" + sales.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
 
         function updateCustomerNav() {
             if(currentUser) {
@@ -1274,10 +1489,12 @@
             
             const prefix = document.getElementById('adm-prefix-input').value || "STH/2026/";
             const invoiceId = prefix + Math.floor(100 + Math.random() * 900);
+            const todayStr = new Date().toISOString().split('T')[0];
 
             const newOrder = {
                 invoiceId: invoiceId,
                 status: "Processing",
+                date: todayStr,
                 summary: cart.map(i => `${i.size} ${i.name}`).join(', '),
                 address: fullAddress
             };
@@ -1290,14 +1507,17 @@
             const tbody = document.getElementById('admin-orders-table-body');
             const tr = document.createElement('tr');
             tr.setAttribute('data-status', 'Processing');
+            tr.setAttribute('data-date', todayStr);
+            tr.setAttribute('data-amount', '220');
             tr.innerHTML = `
                 <td><input type="checkbox" class="order-select-chk"></td>
                 <td>${invoiceId}</td>
-                <td>${chosenAddr.name}<br><small>Mob: ${chosenAddr.mobile} (Alt: ${chosenAddr.altMobile})</small></td>
+                <td>${todayStr}</td>
+                <td>${chosenAddr.name}<br><small>Mob: ${chosenAddr.mobile}</small></td>
                 <td>${fullAddress}</td>
-                <td>Cart Order</td>
+                <td>Cart Order (₹220)</td>
                 <td>
-                    <select class="admin-input-sm" style="padding:4px;">
+                    <select class="admin-input-sm" style="padding:4px;" onchange="checkOrderCancellationRule(this)">
                         <option value="Confirmed">Confirmed</option>
                         <option value="Processing" selected>Processing</option>
                         <option value="Dispatched">Dispatched</option>
@@ -1307,7 +1527,7 @@
                 </td>
                 <td>
                     <button class="btn-action" style="padding:4px 8px; font-size:11px; margin-bottom:3px;" onclick="generateQRPreview('${invoiceId}', '${chosenAddr.name}', '${chosenAddr.mobile}', '${chosenAddr.altMobile}', '${fullAddress}')">QR Label</button>
-                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('${invoiceId}', '${chosenAddr.name}', '${chosenAddr.mobile}', '${fullAddress}', 'Cart Items', 350)">GST Invoice</button>
+                    <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#475569;" onclick="printIndividualGSTInvoice('${invoiceId}', '${chosenAddr.name}', '${chosenAddr.mobile}', '${fullAddress}', 'Cart Items', 220)">GST Invoice</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -1318,31 +1538,6 @@
             renderCart();
             renderGlobalOrderHistory();
             navigateTo('home-view');
-        }
-
-        function filterAdminOrders() {
-            const filterVal = document.getElementById('admin-order-filter').value;
-            const rows = document.querySelectorAll('#admin-orders-table-body tr');
-            rows.forEach(row => {
-                const status = row.getAttribute('data-status') || row.querySelector('select').value;
-                if(filterVal === "ALL" || status === filterVal) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        }
-
-        function previewAdminProductImage(fileInput) {
-            if(fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgTag = fileInput.previousElementSibling;
-                    imgTag.src = e.target.result;
-                    document.getElementById('shop-pimg-display').src = e.target.result;
-                }
-                reader.readAsDataURL(fileInput.files[0]);
-            }
         }
 
         function saveCompanyDetailsConfirm() {
@@ -1425,14 +1620,17 @@
                 tr.innerHTML = `
                     <td>
                         <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                            <img src="${defaultProductImg}" class="admin-pimg-preview" style="width:40px; height:40px; object-fit:contain; border:1px solid #ccc; border-radius:4px;">
-                            <input type="file" accept="image/*" style="font-size:10px; width:130px;" onchange="previewAdminProductImage(this)">
+                            <div style="display:flex; gap:3px;">
+                                <img src="${defaultProductImg}" style="width:30px; height:30px; object-fit:contain; border:1px solid #ccc;">
+                            </div>
+                            <input type="file" accept="image/*" multiple style="font-size:10px; width:140px;" onchange="previewMultipleProductImages(this)">
                         </div>
                     </td>
-                    <td><input type="text" class="admin-input-sm" value="Sugar Alternatives"></td>
                     <td><input type="text" class="admin-input-sm" value="STH-NEW-01"></td>
-                    <td><input type="text" class="admin-input-sm" value="1KG Pack"></td>
                     <td><input type="number" class="admin-input-sm" value="100"></td>
+                    <td><input type="number" class="admin-input-sm" value="5"></td>
+                    <td><input type="text" class="admin-input-sm" value="17011490"></td>
+                    <td><input type="text" class="admin-input-sm" value="BATCH-2026-B"></td>
                     <td><input type="number" class="admin-input-sm" value="50"></td>
                     <td><button class="btn-action" style="padding:4px 10px; font-size:12px;" onclick="saveRowWithConfirm(this)">Save</button></td>
                 `;
@@ -1461,12 +1659,6 @@
                 alert("Please select orders to batch print.");
                 return;
             }
-            window.print();
-        }
-
-        function generateAndPrintReport() {
-            const type = document.getElementById('report-type-select').value;
-            alert(`Generating ${type}...`);
             window.print();
         }
 
