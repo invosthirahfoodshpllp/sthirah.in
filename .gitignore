@@ -1,0 +1,6 @@
+# Environment & Secrets
+.env
+
+# Node modules & Logs
+node_modules/
+npm-debug.log*
