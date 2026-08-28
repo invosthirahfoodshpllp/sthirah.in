@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for authentication and data validation
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        (request.auth.token.email_verified == true && request.auth.token.email == "invosthirahfoodshpllp@gmail.com")
+      );
+    }
+
+    function isStringWithMaxLen(field, maxLen) {
+      return field is string && field.size() <= maxLen;
+    }
+
+    // 1. User Profiles Collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) &&
+        request.resource.data.email is string &&
+        isStringWithMaxLen(request.resource.data.name, 100);
+      allow update: if isOwner(userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['email', 'role']) &&
+        isStringWithMaxLen(request.resource.data.name, 100);
+      allow delete: if isAdmin();
+    }
+
+    // 2. Product Catalog Collection
+    match /products/{productId} {
+      // Public catalog read access
+      allow read: if true;
+      // Admin-only write access
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 3. Verified Orders Collection
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      // Client direct creation forbidden; orders created via backend API / Firebase Admin SDK
+      allow create: if false;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // 4. Customer Reviews Collection
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == "Approved" || isAdmin();
+      allow create: if isAuthenticated() &&
+        isStringWithMaxLen(request.resource.data.comment, 500) &&
+        isStringWithMaxLen(request.resource.data.customer, 100) &&
+        request.resource.data.rating is int &&
+        request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
+        request.resource.data.status == "Approved";
+      allow update, delete: if isAdmin();
+    }
+  }
+}
