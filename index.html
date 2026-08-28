@@ -3267,23 +3267,35 @@
             filterAndPrintReport();
         });
 
-        function initFinancialYearDropdowns() {
+        function getISTDate() {
             const now = new Date();
-            const curYear = now.getFullYear();
-            const curMonth = now.getMonth();
-            const currentFyStart = curMonth >= 3 ? curYear : curYear - 1;
+            const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+            return new Date(utcMs + (5.5 * 3600000));
+        }
 
+        function initFinancialYearDropdowns() {
+            const istNow = getISTDate();
+            const baseStartYear = 2026; // Base FY 2026-2027 starts 01-April-2026 00:00:00 IST
             let fyList = [];
-            for(let y = currentFyStart - 2; y <= currentFyStart + 2; y++) {
-                fyList.push(`${y}-${y+1}`);
+
+            // FY y-(y+1) is only included if current IST time >= 01-April-y 00:00:00 IST
+            for (let y = baseStartYear; y <= 2050; y++) {
+                const fyStartDateIST = new Date(Date.UTC(y, 3, 1, 0, 0, 0) - (5.5 * 3600000));
+                if (istNow >= fyStartDateIST) {
+                    fyList.push(`${y}-${y+1}`);
+                } else {
+                    break;
+                }
             }
+
+            const currentFyOption = fyList[fyList.length - 1] || "2026-2027";
 
             ['dash-fy-select', 'orders-fy-select', 'reports-fy-select'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     let html = "";
                     fyList.forEach(fy => {
-                        html += `<option value="${fy}" ${fy === `${currentFyStart}-${currentFyStart+1}` ? 'selected' : ''}>FY ${fy}</option>`;
+                        html += `<option value="${fy}" ${fy === currentFyOption ? 'selected' : ''}>FY ${fy}</option>`;
                     });
                     el.innerHTML = html;
                 }
