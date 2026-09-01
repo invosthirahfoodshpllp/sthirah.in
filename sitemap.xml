@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://sthirah.in/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://sthirah.in/Logo%202.png</image:loc>
+      <image:title>INVO Sthirah Foods Official Brand Logo</image:title>
+      <image:caption>Official brand logo of INVO Sthirah Foods HP LLP</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sthirah.in/P1.png</image:loc>
+      <image:title>Sthirah Cane Jaggery Powder 1KG Pack Front</image:title>
+      <image:caption>Sthirah 1KG Pouch - Pure Farm-Fresh Cane Jaggery Powder</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sthirah.in/P2.png</image:loc>
+      <image:title>Sthirah Cane Jaggery Powder 1KG Pack Back View</image:title>
+      <image:caption>Sthirah Jaggery Powder Nutritional Values &amp; FSSAI Details</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sthirah.in/P3.png</image:loc>
+      <image:title>Sthirah Cane Jaggery Powder Texture</image:title>
+      <image:caption>Golden unrefined cane jaggery powder granules</image:caption>
+    </image:image>
+  </url>
+</urlset>

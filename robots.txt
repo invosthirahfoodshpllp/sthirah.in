@@ -1,0 +1,18 @@
+# Sthirah E-Commerce Crawling & Indexing Rules
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /Logo%202.png
+Allow: /P1.png
+Allow: /P2.png
+Allow: /P3.png
+Allow: /P4.png
+
+# Disallow Private Admin Console & Server Internal Endpoints
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/admin/*
+Disallow: /server/*
+
+# XML Sitemap Directive
+Sitemap: https://sthirah.in/sitemap.xml
