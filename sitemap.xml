@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://sthirah.in/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://sthirah.in/Logo%202.png</image:loc>
+      <image:title>Sthirah - INVO STHIRAH FOODS HP LLP Logo</image:title>
+      <image:caption>Official brand logo of INVO STHIRAH FOODS HP LLP Salem Tamil Nadu</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sthirah.in/Sthirah%20Jaggery%20Powder%20500g%20Front.jpeg</image:loc>
+      <image:title>Sthirah Organic Cane Jaggery Powder 500g Pack</image:title>
+      <image:caption>Sthirah Pure Farm Fresh Unrefined Cane Jaggery Powder</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://sthirah.in/Sthirah%20Poster%204.png</image:loc>
+      <image:title>Sthirah Foods Brand Banner</image:title>
+      <image:caption>Authentic chemical free unrefined sugarcane jaggery sweetener by Sthirah Foods</image:caption>
+    </image:image>
+  </url>
+</urlset>
